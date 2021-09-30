@@ -1,0 +1,22 @@
+{
+	"name": "frontend",
+	"version": "0.0.0",
+	"license": "GPL-3.0",
+	"description": "A private file hosting service with a clean and simple user interface, and user access controls.",
+	"author": "Elias Mawa <elias@emawa.io>",
+	"private": true,
+	"homepage": "https://github.com/theluckyegg/pndome/tree/main/packages/frontend#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/theluckyegg/pndome.git"
+	},
+	"scripts": {
+		"test": "echo \"Error: run tests from root\" && exit 1"
+	},
+	"bugs": {
+		"url": "https://github.com/theluckyegg/pndome/issues"
+	},
+	"dependencies": {
+		"pndome": "^0.0.0"
+	}
+}

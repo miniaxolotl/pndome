@@ -1,0 +1,5 @@
+{
+	"port": 3600,
+	"production": false,
+	"sessionKeys": [ "super-duper-secret", "even-more-secret" ]
+}

@@ -1,0 +1,35 @@
+{
+	"compilerOptions": {
+		"module": "CommonJS",
+		"target": "es2019",
+		"sourceMap": true,
+		"outDir": "./dist",
+		"baseUrl": "./src/",
+
+		/* typechecking options */
+				"strict": true,
+		"strictPropertyInitialization": true,
+		"noImplicitAny": false,
+
+		/* module resolution options */
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"isolatedModules": false,
+		"typeRoots" : ["./node_modules/@types", "./lib"],
+		
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+
+		"types": [
+			"node",
+		]
+	},
+"exclude": [
+	"node_modules/"
+],
+	"include": [
+		"./packages/**/src/**/*",
+		"./spec/**/src/**/*"
+	]
+}

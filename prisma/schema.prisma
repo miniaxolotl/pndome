@@ -1,0 +1,122 @@
+datasource db {
+	provider = "mysql"
+	url      = env("DATABASE_URL")
+}
+
+generator client {
+	provider = "prisma-client-js"
+}
+
+model File {
+
+	id					Int						@id @default(autoincrement())
+
+	fileId 			String				@db.VarChar(16) @unique
+
+	folderId 		String				@db.VarChar(16) @unique
+
+	name 				String				@db.VarChar(255)
+
+	type     		String				@db.VarChar(32)
+
+	ext     		String				@db.VarChar(32)
+
+	bytes     	Int						@db.UnsignedInt
+
+	sha256    	String				@db.VarChar(64)
+
+	md5     		String				@db.VarChar(32)
+
+	dCount    	Int						@db.UnsignedInt
+
+	vCount    	Int						@db.UnsignedInt
+
+	deleted   	Boolean  			@default(false)
+
+	folder			Folder  			@relation(fields: [folderId], references: [folderId])
+
+	@@index([fileId, folderId])
+
+}
+
+model Folder {
+
+	id      		Int    			  @id @default(autoincrement())
+
+	folderId 		String				@db.VarChar(16) @unique
+
+	userId 		String					@db.VarChar(16) @unique
+
+	name 				String				@db.VarChar(255)
+
+	password 		String?				@db.VarChar(255)
+
+	protected 	Boolean  			@default(true)
+
+	dCount    	Int						@db.UnsignedInt
+
+	vCount    	Int						@db.UnsignedInt
+
+	files				File[]
+
+	users				User   			@relation(fields: [userId], references: [userId])
+
+}
+
+model User {
+
+	id      		Int     		 	@id @default(autoincrement())
+
+	userId 			String				@db.VarChar(16) @unique
+
+	username 		String				@db.VarChar(255)
+
+	password 		String				@db.VarChar(255)
+
+	email			 	String				@db.VarChar(255) @unique
+
+	dCount    	Int						@db.UnsignedInt
+
+	vCount    	Int						@db.UnsignedInt
+
+	folders			Folder[]
+
+	session			Session[]
+
+	token				Token[]
+
+}
+
+model Session {
+
+	id      		Int     		 	@id @default(autoincrement())
+
+	sessionId 	String				@db.VarChar(64) @unique
+
+	userId 			String				@db.VarChar(16) @unique
+
+	valid 			Boolean 		 	@default(true)
+
+	created 		DateTime 		 	@db.Timestamp
+
+	expires 		DateTime 		 	@db.Timestamp
+
+	users				User   				@relation(fields: [userId], references: [userId])
+	
+	@@index([sessionId, userId])
+
+}
+
+model Token {
+
+	id      		Int     		 	@id @default(autoincrement())
+
+	tokenId			String				@db.VarChar(255) @unique
+
+	userId 			String				@db.VarChar(16) @unique
+
+	users				User   				@relation(fields: [userId], references: [userId])
+
+	@@index([tokenId, userId])
+
+}

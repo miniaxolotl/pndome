@@ -1,0 +1,52 @@
+{
+	"name": "pndome",
+	"version": "1.0.0",
+	"license": "GPL-3.0",
+	"description": "A private file hosting service with a clean and simple user interface, and user access controls.",
+	"author": "Elias Mawa <elias@emawa.io>",
+	"private": true,
+	"homepage": "https://github.com/theluckyegg/pndome#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/theluckyegg/pndome.git"
+	},
+	"scripts": {
+		"serve:frontend": "cd frontend && yarn watch",
+		"serve:backend": "concurrently 'npm:serve' ",
+		"serve": "concurrently 'lerna run serve' ",
+		"start:frontend": "concurrently 'npm:serve' ",
+		"start:backend": "concurrently 'npm:serve' ",
+		"start": "concurrently 'npm:serve' ",
+		"build:frontend": "concurrently 'npm:serve' ",
+		"build:backend": "concurrently 'npm:serve' ",
+		"build": "concurrently 'npm:serve' "
+	},
+	"bugs": {
+		"url": "https://github.com/theluckyegg/pndome/issues"
+	},
+	"devDependencies": {
+		"@koa/cors": "^3.1.0",
+		"@types/koa": "^2.13.4",
+		"@types/koa-bodyparser": "^4.3.3",
+		"@types/koa-json": "^2.0.20",
+		"@types/koa-router": "^7.4.4",
+		"@types/koa-session": "^5.10.4",
+		"@types/koa-websocket": "^5.0.7",
+		"@types/koa__cors": "^3.0.3",
+		"concurrently": "^6.3.0",
+		"lerna": "^4.0.0",
+		"nodemon": "^2.0.13",
+		"ts-node": "^10.2.1",
+		"typescript": "^4.4.3"
+	},
+	"dependencies": {
+		"@prisma/client": "^3.1.1",
+		"koa": "^2.13.3",
+		"koa-bodyparser": "^4.3.0",
+		"koa-json": "^2.0.2",
+		"koa-router": "^10.1.1",
+		"koa-session": "^6.2.0",
+		"koa-websocket": "^6.0.0",
+		"prisma": "3.1.1"
+	}
+}
