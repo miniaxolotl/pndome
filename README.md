@@ -44,8 +44,8 @@ Software specifications & design documents can be found in the [wiki](/wiki).
 
 ## See Also
 
-- **pndo.me-server - https://github.com/theluckyegg/pndo.me-server**
-- **pndo.me-web - https://github.com/theluckyegg/pndo.me-web**
+- **[legacy] pndo.me-server - https://github.com/theluckyegg/pndo.me-server**
+- **[legacy] pndo.me-web - https://github.com/theluckyegg/pndo.me-web**
 
 ## Contributing
 
