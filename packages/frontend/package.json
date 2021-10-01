@@ -11,7 +11,7 @@
 		"url": "git+https://github.com/theluckyegg/pndome.git"
 	},
 	"scripts": {
-		"test": "echo \"Error: run tests from root\" && exit 1"
+		"test": "jest"
 	},
 	"bugs": {
 		"url": "https://github.com/theluckyegg/pndome/issues"

@@ -11,15 +11,10 @@
 		"url": "git+https://github.com/theluckyegg/pndome.git"
 	},
 	"scripts": {
-		"serve:frontend": "cd frontend && yarn watch",
-		"serve:backend": "concurrently 'npm:serve' ",
+		"test": "lerna run test",
 		"serve": "concurrently 'lerna run serve' ",
-		"start:frontend": "concurrently 'npm:serve' ",
-		"start:backend": "concurrently 'npm:serve' ",
-		"start": "concurrently 'npm:serve' ",
-		"build:frontend": "concurrently 'npm:serve' ",
-		"build:backend": "concurrently 'npm:serve' ",
-		"build": "concurrently 'npm:serve' "
+		"start": "concurrently 'lerna run start' ",
+		"build": "concurrently 'lerna run build' "
 	},
 	"bugs": {
 		"url": "https://github.com/theluckyegg/pndome/issues"
@@ -34,13 +29,16 @@
 		"@types/koa-websocket": "^5.0.7",
 		"@types/koa__cors": "^3.0.3",
 		"concurrently": "^6.3.0",
+		"jest": "^27.2.4",
 		"lerna": "^4.0.0",
 		"nodemon": "^2.0.13",
+		"ts-jest": "^27.0.5",
 		"ts-node": "^10.2.1",
 		"typescript": "^4.4.3"
 	},
 	"dependencies": {
 		"@prisma/client": "^3.1.1",
+		"@types/jest": "^27.0.2",
 		"koa": "^2.13.3",
 		"koa-bodyparser": "^4.3.0",
 		"koa-json": "^2.0.2",
