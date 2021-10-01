@@ -7,6 +7,8 @@ import KoaSession from 'koa-session';
 import Router from 'koa-router';
 import websockify from 'koa-websocket';
 
+import { Prisma, PrismaClient } from '@prisma/client'
+
 import { Session } from 'pndome';
 
 import { config } from './lib/config';
@@ -23,6 +25,16 @@ const app = websockify(koaApp as any, wsOptions);
 
 const router: Router = new Router();
 const socket_router = new Router();
+
+/************************************************
+	* database
+	************************************************/
+
+(app.context as unknown as {
+	db: PrismaClient<Prisma.PrismaClientOptions, never,
+	Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
+}).db = new PrismaClient();
+console.log("-connected successfully to database-");
 
 /************************************************
 	* middleware
@@ -62,8 +74,7 @@ app.use(BodyParser());
 { /* api/v1 */
 	const APIv1: Router = new Router();
 
-	APIv1.use('/api/v1/f', FileController.routes());
-	APIv1.use('/api/v1/file', FileController.routes());
+	APIv1.use(['/f', '/file'], FileController.routes());
 
 	router.use('/api/v1', APIv1.routes());
 }
@@ -84,7 +95,7 @@ app.ws.use(socket_router.routes() as any);
 
 app.listen(config.port, () => {
 	// eslint-disable-next-line no-console
-	console.log(`Server listening: http://localhost:${config.port}`);
+	console.log(`listening: http://localhost:${config.port}`);
 	// eslint-disable-next-line no-console
 	console.log(`enviroment: ${app.env}`);
 });
