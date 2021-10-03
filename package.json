@@ -28,6 +28,7 @@
 		"@types/koa-session": "^5.10.4",
 		"@types/koa-websocket": "^5.0.7",
 		"@types/koa__cors": "^3.0.3",
+		"@types/uuid": "^8.3.1",
 		"concurrently": "^6.3.0",
 		"jest": "^27.2.4",
 		"lerna": "^4.0.0",
@@ -39,12 +40,16 @@
 	"dependencies": {
 		"@prisma/client": "^3.1.1",
 		"@types/jest": "^27.0.2",
+		"bcrypt": "^5.0.1",
+		"joi": "^17.4.2",
 		"koa": "^2.13.3",
 		"koa-bodyparser": "^4.3.0",
 		"koa-json": "^2.0.2",
 		"koa-router": "^10.1.1",
 		"koa-session": "^6.2.0",
 		"koa-websocket": "^6.0.0",
-		"prisma": "3.1.1"
+		"prisma": "3.1.1",
+		"uid": "^2.0.0",
+		"uuid": "^8.3.2"
 	}
 }

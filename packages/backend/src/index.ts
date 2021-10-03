@@ -7,12 +7,11 @@ import KoaSession from 'koa-session';
 import Router from 'koa-router';
 import websockify from 'koa-websocket';
 
-import { Prisma, PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
-import { Session } from 'pndome';
+import { Config, Session } from 'pndome';
 
-import { config } from './lib/config';
-import { FileController } from './controller';
+import { FileController, OAuthController, SessionController } from './controller';
 
 /************************************************
 	* setup
@@ -30,21 +29,19 @@ const socket_router = new Router();
 	* database
 	************************************************/
 
-(app.context as unknown as {
-	db: PrismaClient<Prisma.PrismaClientOptions, never,
-	Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>
-}).db = new PrismaClient();
-console.log("-connected successfully to database-");
+(app.context as any).db = new PrismaClient();
+
+console.log("--connected successfully to database--");
 
 /************************************************
 	* middleware
 	************************************************/
 
-app.keys = config.sessionKeys;
+app.keys = Config.sessionKeys;
 
 app.use(KoaSession({
 	key: 'session',
-	maxAge: 1000*60*60*24*30,
+	maxAge: 1000*60*60*24*30, // 30 days
 	renew: true
 }, app));
 
@@ -72,11 +69,14 @@ app.use(BodyParser());
 	************************************************/
 
 { /* api/v1 */
-	const APIv1: Router = new Router();
+	const API: Router = new Router();
 
-	APIv1.use(['/f', '/file'], FileController.routes());
+	API.use(['/f', '/file'], FileController.routes());
 
-	router.use('/api/v1', APIv1.routes());
+	API.use(['/a', '/auth'], SessionController.routes());
+	API.use(['/oa', '/oauth'], OAuthController.routes());
+
+	router.use('/api/v1', API.routes());
 }
 	
 app.use(router.routes());
@@ -93,9 +93,9 @@ app.ws.use(socket_router.routes() as any);
 	* start server
 	************************************************/
 
-app.listen(config.port, () => {
+app.listen(Config.port, () => {
 	// eslint-disable-next-line no-console
-	console.log(`listening: http://localhost:${config.port}`);
+	console.log(`listening: http://localhost:${Config.port}`);
 	// eslint-disable-next-line no-console
 	console.log(`enviroment: ${app.env}`);
 });

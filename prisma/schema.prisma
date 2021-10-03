@@ -49,7 +49,7 @@ model Folder {
 
 	name 				String				@db.VarChar(255)
 
-	password 		String?				@db.VarChar(255)
+	password 		String				@db.VarChar(255)
 
 	protected 	Boolean  			@default(true)
 
@@ -69,21 +69,17 @@ model User {
 
 	userId 			String				@db.VarChar(16) @unique
 
-	username 		String				@db.VarChar(255)
+	username 		String				@db.VarChar(255) @unique
 
 	password 		String				@db.VarChar(255)
 
 	email			 	String				@db.VarChar(255) @unique
 
-	dCount    	Int						@db.UnsignedInt
-
-	vCount    	Int						@db.UnsignedInt
-
 	folders			Folder[]
 
-	session			Session[]
+	sessions			Session[]
 
-	token				Token[]
+	tokens				Token[]
 
 }
 
@@ -93,13 +89,13 @@ model Session {
 
 	sessionId 	String				@db.VarChar(64) @unique
 
-	userId 			String				@db.VarChar(16) @unique
+	userId 			String				@db.VarChar(16)
 
 	valid 			Boolean 		 	@default(true)
 
-	created 		DateTime 		 	@db.Timestamp
+	created 		DateTime 		 	@db.Timestamp @default(now())
 
-	expires 		DateTime 		 	@db.Timestamp
+	expires 		DateTime 		 	@db.Timestamp @default(now())
 
 	users				User   				@relation(fields: [userId], references: [userId])
 	
@@ -113,7 +109,7 @@ model Token {
 
 	tokenId			String				@db.VarChar(255) @unique
 
-	userId 			String				@db.VarChar(16) @unique
+	userId 			String				@db.VarChar(16)
 
 	users				User   				@relation(fields: [userId], references: [userId])
 

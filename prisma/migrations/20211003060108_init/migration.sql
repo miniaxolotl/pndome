@@ -25,7 +25,7 @@ CREATE TABLE `Folder` (
     `folderId` VARCHAR(16) NOT NULL,
     `userId` VARCHAR(16) NOT NULL,
     `name` VARCHAR(255) NOT NULL,
-    `password` VARCHAR(255),
+    `password` VARCHAR(255) NOT NULL,
     `protected` BOOLEAN NOT NULL DEFAULT true,
     `dCount` INTEGER UNSIGNED NOT NULL,
     `vCount` INTEGER UNSIGNED NOT NULL,
@@ -42,10 +42,9 @@ CREATE TABLE `User` (
     `username` VARCHAR(255) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL,
-    `dCount` INTEGER UNSIGNED NOT NULL,
-    `vCount` INTEGER UNSIGNED NOT NULL,
 
     UNIQUE INDEX `User_userId_key`(`userId`),
+    UNIQUE INDEX `User_username_key`(`username`),
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -56,11 +55,10 @@ CREATE TABLE `Session` (
     `sessionId` VARCHAR(64) NOT NULL,
     `userId` VARCHAR(16) NOT NULL,
     `valid` BOOLEAN NOT NULL DEFAULT true,
-    `created` TIMESTAMP NOT NULL,
-    `expires` TIMESTAMP NOT NULL,
+    `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `expires` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `Session_sessionId_key`(`sessionId`),
-    UNIQUE INDEX `Session_userId_key`(`userId`),
     INDEX `Session_sessionId_userId_idx`(`sessionId`, `userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -72,7 +70,6 @@ CREATE TABLE `Token` (
     `userId` VARCHAR(16) NOT NULL,
 
     UNIQUE INDEX `Token_tokenId_key`(`tokenId`),
-    UNIQUE INDEX `Token_userId_key`(`userId`),
     INDEX `Token_tokenId_userId_idx`(`tokenId`, `userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
