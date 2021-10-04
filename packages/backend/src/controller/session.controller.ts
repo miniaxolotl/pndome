@@ -38,7 +38,7 @@ router.post('/register', async (ctx: ParameterizedContext) => {
 		} else {
 			const passwordHash: string | null = await Bcrypt.genHash(value.password);
 			const userId: string = uid(16);
-			const sessionId: string = uid(16);
+			const sessionId: string = uuid();
 
 			const createUser = db.user.create({
 				data: {
@@ -95,7 +95,7 @@ router.post('/login', async (ctx: ParameterizedContext) => {
 		const user = await findUser(db, value);
 		if(user) {
 			if(await Bcrypt.compare(value.password, user.password)) {
-				const sessionId: string = uid(16);
+				const sessionId: string = uuid();
 
 				const disableAllSessions = db.session.updateMany({
 					where: {

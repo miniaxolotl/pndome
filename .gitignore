@@ -1,8 +1,4 @@
 node_modules/
 coverage/
 
-config/*
-!config/db.example.json
-!config/server.example.json
-
 .env

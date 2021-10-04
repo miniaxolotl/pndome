@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
-import { Config } from "./";
 
-const saltRounds = Config.bcrypt.saltRounds;
+const saltRounds = process.env.SALT_ROUNDS || 10;
 
 /**
 	* Salt the hash

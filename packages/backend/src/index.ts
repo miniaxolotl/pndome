@@ -9,7 +9,7 @@ import websockify from 'koa-websocket';
 
 import { PrismaClient } from '@prisma/client'
 
-import { Config, Session } from 'pndome';
+import { Session } from 'pndome';
 
 import { FileController, OAuthController, SessionController } from './controller';
 
@@ -30,14 +30,15 @@ const socket_router = new Router();
 	************************************************/
 
 (app.context as any).db = new PrismaClient();
-
-console.log("--connected successfully to database--");
+if((app.context as any).db) {
+	console.log("connected successfully to database");
+}
 
 /************************************************
 	* middleware
 	************************************************/
 
-app.keys = Config.sessionKeys;
+app.keys = JSON.parse(process.env.SESSION_KEYS ?? '[]');
 
 app.use(KoaSession({
 	key: 'session',
@@ -93,9 +94,9 @@ app.ws.use(socket_router.routes() as any);
 	* start server
 	************************************************/
 
-app.listen(Config.port, () => {
+app.listen(process.env.PORT, () => {
 	// eslint-disable-next-line no-console
-	console.log(`listening: http://localhost:${Config.port}`);
+	console.log(`listening: http://localhost:${process.env.PORT}`);
 	// eslint-disable-next-line no-console
-	console.log(`enviroment: ${app.env}`);
+	// console.log(`enviroment: ${app.env}`);
 });
