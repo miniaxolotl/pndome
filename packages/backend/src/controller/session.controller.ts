@@ -1,7 +1,7 @@
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
 
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 import { uid } from 'uid/secure';
 import { v4 as uuid } from 'uuid';
@@ -31,6 +31,7 @@ router.post('/register', async (ctx: ParameterizedContext) => {
 		return;
 	} else {
 		const user = await findUser(db, value);
+		
 		if(user) {
 			ctx.status = StatusCodes.CLIENT_ERROR.CONFILCT.status;
 			ctx.body = StatusCodes.CLIENT_ERROR.CONFILCT.message;
@@ -65,6 +66,7 @@ router.post('/register', async (ctx: ParameterizedContext) => {
 					username: value.username,
 					email: value.email,
 				};
+
 				(ctx.session as any).user = response;
 				ctx.status = StatusCodes.SUCCESS.CREATED.status;
 				ctx.body = response;
@@ -93,6 +95,7 @@ router.post('/login', async (ctx: ParameterizedContext) => {
 		return;
 	} else {
 		const user = await findUser(db, value);
+		
 		if(user) {
 			if(await Bcrypt.compare(value.password, user.password)) {
 				const sessionId: string = uuid();
@@ -126,6 +129,7 @@ router.post('/login', async (ctx: ParameterizedContext) => {
 						username: user.username,
 						email: user.email,
 					};
+					
 					(ctx.session as any).user = response;
 					ctx.status = StatusCodes.SUCCESS.CREATED.status;
 					ctx.body = response;
@@ -167,7 +171,7 @@ router.post("/logout", async (ctx: ParameterizedContext) => {
 			username: null,
 			email: null,
 		};
-	
+
 		ctx.status = StatusCodes.SUCCESS.OK.status;
 		ctx.body = StatusCodes.SUCCESS.OK.message;
 		return;

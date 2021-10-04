@@ -12,7 +12,7 @@
 	},
 	"scripts": {
 		"test": "lerna run test",
-		"serve": "concurrently 'lerna run serve' ",
+		"serve": "lerna run serve --stream",
 		"start": "concurrently 'lerna run start' ",
 		"build": "concurrently 'lerna run build' "
 	},
