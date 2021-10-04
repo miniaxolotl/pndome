@@ -65,9 +65,9 @@ router.post('/register', async (ctx: ParameterizedContext) => {
 					username: value.username,
 					email: value.email,
 				};
+				(ctx.session as any).user = response;
 				ctx.status = StatusCodes.SUCCESS.CREATED.status;
 				ctx.body = response;
-				(ctx.session as any).user = response;
 				return;
 			} else {
 				ctx.status = StatusCodes.SERVER_ERROR.INTERNAL.status;
@@ -126,9 +126,9 @@ router.post('/login', async (ctx: ParameterizedContext) => {
 						username: user.username,
 						email: user.email,
 					};
+					(ctx.session as any).user = response;
 					ctx.status = StatusCodes.SUCCESS.CREATED.status;
 					ctx.body = response;
-					(ctx.session as any).user = response;
 					return;
 				} else {
 					ctx.status = StatusCodes.SERVER_ERROR.INTERNAL.status;
