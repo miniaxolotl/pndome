@@ -1,7 +1,10 @@
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
 
-import { validateSession } from '../../middleware';
+import { PrismaClient } from '@prisma/client';
+
+import { validateAuthorization } from '../../middleware';
+import { StatusCodes } from 'pndome';
 
 const router: Router = new Router();
 
@@ -9,12 +12,25 @@ const router: Router = new Router();
  * routes
  ************************************************/
 
+router.post('/',
+ validateAuthorization({ passthrough: false, }),
+ async (ctx: ParameterizedContext) => {
+	const body = ctx.request.body;
+	const db: PrismaClient = ctx.db;
+	 
+	ctx.status = StatusCodes.SUCCESS.OK.status;
+	ctx.body = StatusCodes.SUCCESS.OK.message;
+ }
+);
+
 router.get('/:fileId',
-	validateSession({ passthrough: true, }),
+validateAuthorization({ passthrough: true, }),
 	async (ctx: ParameterizedContext) => {
-		console.log(ctx.state);
+		const body = ctx.request.body;
+		const db: PrismaClient = ctx.db;
 		
-		ctx.body = 'Hello World';
+		ctx.status = StatusCodes.SUCCESS.OK.status;
+		ctx.body = StatusCodes.SUCCESS.OK.message;
 	}
 );
 

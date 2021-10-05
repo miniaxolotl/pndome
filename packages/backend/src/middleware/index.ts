@@ -1,1 +1,1 @@
-export * from "./validate.session";
+export * from "./validate.authorization";

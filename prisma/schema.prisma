@@ -45,7 +45,7 @@ model Folder {
 
 	folderId 		String				@db.VarChar(16) @unique
 
-	userId 		String					@db.VarChar(16) @unique
+	userId 			String				@db.VarChar(16) @unique
 
 	name 				String				@db.VarChar(255)
 
@@ -59,7 +59,7 @@ model Folder {
 
 	files				File[]
 
-	users				User   			@relation(fields: [userId], references: [userId])
+	users				User   				@relation(fields: [userId], references: [userId])
 
 }
 
@@ -77,9 +77,9 @@ model User {
 
 	folders			Folder[]
 
-	sessions			Session[]
+	sessions		Session[]
 
-	tokens				Token[]
+	tokens			Token[]
 
 }
 
@@ -95,7 +95,7 @@ model Session {
 
 	created 		DateTime 		 	@db.Timestamp @default(now())
 
-	expires 		DateTime 		 	@db.Timestamp @default(now())
+	expires 		DateTime 			@db.Timestamp
 
 	users				User   				@relation(fields: [userId], references: [userId])
 	
@@ -111,6 +111,12 @@ model Token {
 
 	userId 			String				@db.VarChar(16)
 
+	valid 			Boolean 		 	@default(true)
+
+	created 		DateTime 		 	@db.Timestamp @default(now())
+
+	expires 		DateTime 			@db.Timestamp
+	
 	users				User   				@relation(fields: [userId], references: [userId])
 
 	@@index([tokenId, userId])

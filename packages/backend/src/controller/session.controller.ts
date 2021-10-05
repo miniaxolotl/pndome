@@ -54,6 +54,7 @@ router.post('/register', async (ctx: ParameterizedContext) => {
 				data: {
 					sessionId: sessionId,
 					userId: userId,
+					expires: new Date(new Date().getTime() + (1000*60*60*24*30)),
 				}
 			});
 
@@ -99,11 +100,11 @@ router.post('/login', async (ctx: ParameterizedContext) => {
 		if(user) {
 			if(await Bcrypt.compare(value.password, user.password)) {
 				const sessionId: string = uuid();
+				const session = (ctx.session as any).user;
 
-				const disableAllSessions = db.session.updateMany({
+				const disableCurrentSession = db.session.updateMany({
 					where: {
-						userId: user.userId,
-						valid: true,
+						sessionId: session.sessionId ?? undefined,
 					},
 					data: {
 						valid: false,
@@ -114,11 +115,12 @@ router.post('/login', async (ctx: ParameterizedContext) => {
 					data: {
 						sessionId: sessionId,
 						userId: user.userId,
+						expires: new Date(new Date().getTime() + (1000*60*60*24*30)),
 					}
 				});
 
 				const success = await db.$transaction([
-					disableAllSessions,
+					disableCurrentSession,
 					createSession
 				]);
 
@@ -149,36 +151,81 @@ router.post('/login', async (ctx: ParameterizedContext) => {
 });
 
 router.post("/logout", async (ctx: ParameterizedContext) => {
-	const body = ctx.request.body;
 	const db: PrismaClient = ctx.db;
 
-	const session = (ctx.session as any).user.session;
-
-	const disableAllSessions = await db.session.updateMany({
-		where: {
-			sessionId: session,
-			valid: true,
-		},
-		data: {
-			valid: false,
-		}
-	});
+	const session = (ctx.session as any).user;
 	
-	if(disableAllSessions.count > 0) { 
-		(ctx.session as any).user = {
-			sessionId: null,
-			userId: null,
-			username: null,
-			email: null,
-		};
+	if(session.sessionId) {
+		const disableAllSessions = await db.session.update({
+			where: {
+				sessionId: session.sessionId,
+			},
+			data: {
+				valid: false,
+			}
+		});
 
-		ctx.status = StatusCodes.SUCCESS.OK.status;
-		ctx.body = StatusCodes.SUCCESS.OK.message;
-		return;
+		if(disableAllSessions) { 
+			(ctx.session as any).user = {
+				sessionId: null,
+				userId: null,
+				username: null,
+				email: null,
+			};
+
+			ctx.status = StatusCodes.SUCCESS.OK.status;
+			ctx.body = StatusCodes.SUCCESS.OK.message;
+			return;
+		} else {
+			ctx.status = StatusCodes.SERVER_ERROR.INTERNAL.status;
+			ctx.body = StatusCodes.SERVER_ERROR.INTERNAL.message;
+			return;
+		}
 	} else {
-		ctx.status = StatusCodes.SERVER_ERROR.INTERNAL.status;
-		ctx.body = StatusCodes.SERVER_ERROR.INTERNAL.message;
+		ctx.status = StatusCodes.CLIENT_ERROR.BAD_REQUEST.status;
+		ctx.body = StatusCodes.CLIENT_ERROR.BAD_REQUEST.message;
 		return;
+
+	}
+});
+
+router.post("/invalidate_all", async (ctx: ParameterizedContext) => {
+	const db: PrismaClient = ctx.db;
+
+	const session = (ctx.session as any).user;
+
+	if(session.sessionId && session.userId) {
+		const disableAllSessions = await db.session.updateMany({
+			where: {
+				sessionId: session.sessionId,
+				userId: session.userId,
+			},
+			data: {
+				valid: false,
+			}
+		});
+
+		if(disableAllSessions) { 
+			(ctx.session as any).user = {
+				sessionId: null,
+				userId: null,
+				username: null,
+				email: null,
+			};
+
+			ctx.status = StatusCodes.SUCCESS.OK.status;
+			ctx.body = StatusCodes.SUCCESS.OK.message;
+			return;
+		} else {
+			ctx.status = StatusCodes.SERVER_ERROR.INTERNAL.status;
+			ctx.body = StatusCodes.SERVER_ERROR.INTERNAL.message;
+			return;
+		}
+	} else {
+		ctx.status = StatusCodes.CLIENT_ERROR.BAD_REQUEST.status;
+		ctx.body = StatusCodes.CLIENT_ERROR.BAD_REQUEST.message;
+		return;
+
 	}
 });
 
