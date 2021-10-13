@@ -1,83 +1,109 @@
 import { PrismaClient } from ".prisma/client";
 import Joi, { date } from "joi";
-import { validate } from "uuid";
+import { uid } from 'uid/secure';
+import { validate, v4 as uuid } from 'uuid';
+
+import { Bcrypt } from ".";
 import { RegisterSchema } from "./schema";
 
 export interface SessionType {
-	session_id?: string | null;
-	user_id?: string | null;
-	email?: string | null;
+	sessionid?: string;
+	userId?: string;
+	username?: string;
+	email?: string;
 }
 
-export interface RegisterRequst {
-	username?: string;
-	password?: string;
-	email?: string;
+export interface RegisterRequstType {
+	email: string;
+	username: string;
+	password: string;
 };
 
-export const findUser = async (db: PrismaClient, payload: RegisterRequst) => {
+export interface LoginRequstType {
+	username: string;
+	password: string;
+};
+
+export const validateRegisterRequest =
+	(req: RegisterRequstType): RegisterRequstType | null => {
+	const { value, error } = RegisterSchema.validate(req, {
+		abortEarly: false,
+		errors: { escapeHtml: true }
+	});
+	if(error) {
+		return null;
+	} else {
+		return value;
+	}
+};
+
+export const validateLoginRequest =
+	(req: RegisterRequstType): RegisterRequstType | null => {
+	const { value, error } = RegisterSchema.validate(req, {
+		abortEarly: false,
+		errors: { escapeHtml: true }
+	});
+	if(error) {
+		return null;
+	} else {
+		return value;
+	}
+};
+
+export const createUser = async (db: PrismaClient, user: RegisterRequstType) => {
+	if(await findUser(db, user)) {
+		return null;
+	} else {
+		const passwordHash: string | null = await Bcrypt.genHash(user.password);
+		const userId: string = uid(16);
+		return db.user.create({
+			data: {
+				userId: userId,
+				username: user.username,
+				password: passwordHash,
+				email: user.email,
+			}
+		});
+	}
+};
+
+export const createSession = async (db: PrismaClient, userId: string) => {
+	const sessionId: string = uuid();
+	return db.session.create({
+		data: {
+			sessionId: sessionId,
+			userId: userId,
+			expires: new Date(new Date().getTime() + (1000*60*60*24*30)),
+		}
+	});
+};
+
+export const revokeAllSession = async (db: PrismaClient, userId: string) => {
+	return db.session.updateMany({
+		where: {
+			userId: userId,
+		},
+		data: {
+			valid: false,
+		}
+	});
+};
+
+export const revokeSession = async (db: PrismaClient, sessionId: string) => {
+	return db.session.update({
+		where: {
+			sessionId: sessionId,
+		},
+		data: {
+			valid: false,
+		}
+	});
+};
+
+export const findUser = async (db: PrismaClient, payload: LoginRequstType) => {
 	return db.user.findFirst({
 		where:{
-			OR: [{
-				username: payload.username
-			}, {
-				email: payload.email
-			}]
+			username: payload.username
 		}
 	})
-};
-
-export const validateRegister = (payload: RegisterRequst) => {
-	const data = {
-		username: validateUsername(payload.username),
-		password: validatePassword(payload.password),
-		email: validateEmail(payload.email),
-		success: false,
-	}
-
-	data.success = data.username && data.password && data.email;
-	
-	return data;
-};
-
-export const validateUsername = (payload?: string) => {
-	const { value, error } = RegisterSchema.validate({
-		username: payload
-	}, {
-		errors: { escapeHtml: true }
-	});
-	
-	if(error) {
-		return null;
-	} else {
-		return value.username;
-	}
-};
-
-export const validatePassword = (payload?: string) => {
-	const { value, error } = RegisterSchema.validate({
-		password: payload
-	}, {
-		errors: { escapeHtml: true }
-	});
-
-	if(error) {
-		return null;
-	} else {
-		return value.password;
-	}
-};
-
-export const validateEmail = (payload?: string) => {
-	const { value, error } = RegisterSchema.validate({
-		email: payload
-	}, {
-		errors: { escapeHtml: true }
-	});
-
-	if(error) {
-		return null;
-	} else {
-		return value.email;
-	}
 };
