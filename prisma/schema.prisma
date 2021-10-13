@@ -9,11 +9,9 @@ generator client {
 
 model File {
 
-	id					Int						@id @default(autoincrement())
+	fileId 			String				@id @db.VarChar(16) @unique
 
-	fileId 			String				@db.VarChar(16) @unique
-
-	folderId 		String				@db.VarChar(16) @unique
+	folderId 		String				@db.VarChar(16)
 
 	name 				String				@db.VarChar(255)
 
@@ -41,11 +39,9 @@ model File {
 
 model Folder {
 
-	id      		Int    			  @id @default(autoincrement())
+	folderId 		String				@id @db.VarChar(16)
 
-	folderId 		String				@db.VarChar(16) @unique
-
-	userId 			String				@db.VarChar(16) @unique
+	userId 			String				@db.VarChar(16)
 
 	name 				String				@db.VarChar(255)
 
@@ -65,29 +61,41 @@ model Folder {
 
 model User {
 
-	id      		Int     		 	@id @default(autoincrement())
+	userId 					String				@id @db.VarChar(16)
 
-	userId 			String				@db.VarChar(16) @unique
+	username 				String				@db.VarChar(255) @unique
 
-	username 		String				@db.VarChar(255) @unique
+	password 				String				@db.VarChar(255)
 
-	password 		String				@db.VarChar(255)
+	email					 	String				@db.VarChar(255) @unique
 
-	email			 	String				@db.VarChar(255) @unique
+	roles					 	String				@db.VarChar(255)
 
-	folders			Folder[]
+	folders					Folder[]
 
-	sessions		Session[]
+	sessions				Session[]
 
-	tokens			Token[]
+	tokens					Token[]
 
+}
+
+model Client {
+
+	clientId				String				@id @db.VarChar(255)
+
+	clientSecret 		String				@db.VarChar(16) @unique
+
+	redirectUri 		String 		 		@db.VarChar(255)
+
+	scope 					String 				@db.VarChar(255)
+
+	@@index([clientId, clientSecret])
+	
 }
 
 model Session {
 
-	id      		Int     		 	@id @default(autoincrement())
-
-	sessionId 	String				@db.VarChar(64) @unique
+	sessionId 	String				@id @db.VarChar(64)
 
 	userId 			String				@db.VarChar(16)
 
@@ -105,9 +113,7 @@ model Session {
 
 model Token {
 
-	id      		Int     		 	@id @default(autoincrement())
-
-	tokenId			String				@db.VarChar(255) @unique
+	tokenId			String				@id @db.VarChar(255)
 
 	userId 			String				@db.VarChar(16)
 

@@ -1,4 +1,4 @@
-import Koa from 'koa';
+import Koa, { ParameterizedContext } from 'koa';
 
 import BodyParser from 'koa-bodyparser';
 import CORS from '@koa/cors';
@@ -12,6 +12,8 @@ import { PrismaClient } from '@prisma/client'
 import { Session } from 'pndome';
 
 import { FileController, OAuthController, SessionController } from './controller';
+
+import config from '../../../server.config'
 
 /************************************************
 	* setup
@@ -38,7 +40,7 @@ if((app.context as any).db) {
 	* middleware
 	************************************************/
 
-app.keys = JSON.parse(process.env.SESSION_KEYS ?? '[]');
+app.keys = config.SESSION_KEYS;
 
 app.use(KoaSession({
 	key: 'session',
@@ -59,11 +61,7 @@ app.use(BodyParser());
 	* authentication
 	************************************************/
 
-(app.context as Koa.BaseContext & { state: Session.SessionType }).state = {
-	session_id: null,
-	user_id: null,
-	email: null
-};
+(app.context as Koa.BaseContext & { state: Session.SessionType }).state = {};
 
 /************************************************
 	* routes
@@ -83,8 +81,10 @@ app.use(BodyParser());
 app.use(router.routes());
 
 { /* websocket */
-	socket_router.all('/', async (ctx: any) => {
-		ctx.websocket.send('Hello World');
+	socket_router.all('', async (ctx: ParameterizedContext) => {
+		ctx.websocket.on('message', (message: string) => {
+			message.localeCompare('ping') == 0 ? ctx.websocket.send('pong!') : null;
+		});
 	});
 }
 
@@ -94,9 +94,9 @@ app.ws.use(socket_router.routes() as any);
 	* start server
 	************************************************/
 
-app.listen(process.env.PORT, () => {
+app.listen(config.PORT, () => {
 	// eslint-disable-next-line no-console
-	console.log(`listening: http://localhost:${process.env.PORT}`);
+	console.log(`listening: http://localhost:${config.PORT}`);
 	// eslint-disable-next-line no-console
-	// console.log(`enviroment: ${app.env}`);
+	console.log(`enviroment: ${app.env}`);
 });

@@ -1,6 +1,5 @@
 -- CreateTable
 CREATE TABLE `File` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `fileId` VARCHAR(16) NOT NULL,
     `folderId` VARCHAR(16) NOT NULL,
     `name` VARCHAR(255) NOT NULL,
@@ -14,14 +13,12 @@ CREATE TABLE `File` (
     `deleted` BOOLEAN NOT NULL DEFAULT false,
 
     UNIQUE INDEX `File_fileId_key`(`fileId`),
-    UNIQUE INDEX `File_folderId_key`(`folderId`),
     INDEX `File_fileId_folderId_idx`(`fileId`, `folderId`),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`fileId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Folder` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `folderId` VARCHAR(16) NOT NULL,
     `userId` VARCHAR(16) NOT NULL,
     `name` VARCHAR(255) NOT NULL,
@@ -30,51 +27,55 @@ CREATE TABLE `Folder` (
     `dCount` INTEGER UNSIGNED NOT NULL,
     `vCount` INTEGER UNSIGNED NOT NULL,
 
-    UNIQUE INDEX `Folder_folderId_key`(`folderId`),
-    UNIQUE INDEX `Folder_userId_key`(`userId`),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`folderId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `User` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` VARCHAR(16) NOT NULL,
     `username` VARCHAR(255) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL,
 
-    UNIQUE INDEX `User_userId_key`(`userId`),
     UNIQUE INDEX `User_username_key`(`username`),
     UNIQUE INDEX `User_email_key`(`email`),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`userId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Client` (
+    `clientId` VARCHAR(255) NOT NULL,
+    `clientSecret` VARCHAR(16) NOT NULL,
+    `redirectUri` VARCHAR(255) NOT NULL,
+    `scope` VARCHAR(255) NOT NULL,
+
+    UNIQUE INDEX `Client_clientSecret_key`(`clientSecret`),
+    INDEX `Client_clientId_clientSecret_idx`(`clientId`, `clientSecret`),
+    PRIMARY KEY (`clientId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Session` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `sessionId` VARCHAR(64) NOT NULL,
     `userId` VARCHAR(16) NOT NULL,
     `valid` BOOLEAN NOT NULL DEFAULT true,
     `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `expires` TIMESTAMP NOT NULL,
 
-    UNIQUE INDEX `Session_sessionId_key`(`sessionId`),
     INDEX `Session_sessionId_userId_idx`(`sessionId`, `userId`),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`sessionId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Token` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `tokenId` VARCHAR(255) NOT NULL,
     `userId` VARCHAR(16) NOT NULL,
     `valid` BOOLEAN NOT NULL DEFAULT true,
     `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `expires` TIMESTAMP NOT NULL,
 
-    UNIQUE INDEX `Token_tokenId_key`(`tokenId`),
     INDEX `Token_tokenId_userId_idx`(`tokenId`, `userId`),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`tokenId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
