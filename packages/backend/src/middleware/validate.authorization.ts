@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { ParameterizedContext } from "koa";
-import { StatusCodes } from "pndome";
+
+import { StatusCodes } from "pndome/lib/util";
 
 export const validateAuthorization = (
 	options: {

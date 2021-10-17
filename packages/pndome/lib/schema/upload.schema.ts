@@ -1,15 +1,13 @@
-import joi, { object } from "joi";
+import Joi from "joi";
 
-const UploadSchema = object({
-	folderId: joi.string()
+export default  Joi.object({
+	folderId: Joi.string()
 	.default(null),
 
-	password: joi.string()
+	password: Joi.string()
 	.default(null)
 	.min(3),
 
-	protected: joi.boolean()
+	protected: Joi.boolean()
 	.required(),
 });
-
-export default UploadSchema;
