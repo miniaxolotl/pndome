@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 
-import config from "../../../server.config";
+import config from "../../../../server.config";
 
 const saltRounds = config.PORT || 10;
 

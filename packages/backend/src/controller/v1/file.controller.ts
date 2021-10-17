@@ -4,7 +4,7 @@ import Router from 'koa-router';
 import { PrismaClient } from '@prisma/client';
 
 import { validateAuthorization } from '../../middleware';
-import { StatusCodes } from 'pndome';
+import { StatusCodes } from 'pndome/lib/util';
 
 const router: Router = new Router();
 

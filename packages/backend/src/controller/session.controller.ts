@@ -3,8 +3,8 @@ import Router from 'koa-router';
 import { PrismaClient } from '@prisma/client';
 import Joi from 'joi';
 
-import { Bcrypt, StatusCodes } from 'pndome';
-import { createSession, createUser, findUser, revokeSession, validateRegisterRequest } from 'pndome/lib/Session';
+import { Bcrypt, StatusCodes } from 'pndome/lib/util';
+import { createSession, findUser, revokeSession, validateLoginRequest } from 'pndome/lib/service/Session';
 
 const router: Router = new Router();
 
@@ -12,50 +12,14 @@ const router: Router = new Router();
  * routes
  ************************************************/
 
-router.post('/register', async (ctx: ParameterizedContext) => {
-	const body = ctx.request.body;
-	const db: PrismaClient = ctx.db;
-
-	const req = validateRegisterRequest(body);
-
-	if(req) {
-		const user = await createUser(db, req);
-		if(user) {
-			const session = await createSession(db, user.userId);
-			if(session) {
-				ctx.status = StatusCodes.SUCCESS.CREATED.status;
-				ctx.body = {
-					sessionId: session.sessionId,
-					userId: user.userId,
-					username: user.username,
-					email: user.email,
-				};
-				return;
-			} else {
-				ctx.status = StatusCodes.SERVER_ERROR.INTERNAL.status;
-				ctx.body = StatusCodes.SERVER_ERROR.INTERNAL.message;
-				return;
-			}
-		} else {
-			ctx.status = StatusCodes.CLIENT_ERROR.CONFILCT.status;
-			ctx.body = StatusCodes.CLIENT_ERROR.CONFILCT.message;
-			return;
-		}
-	} else {
-		ctx.status = StatusCodes.CLIENT_ERROR.BAD_REQUEST.status;
-		ctx.body = StatusCodes.CLIENT_ERROR.BAD_REQUEST.message;
-		return;
-	}
-});
-
 router.post('/login', async (ctx: ParameterizedContext) => {
 	const body = ctx.request.body;
 	const db: PrismaClient = ctx.db;
 
-	const req = validateRegisterRequest(body);
+	const req = validateLoginRequest(body);
 
 	if(req) {
-		const user = await findUser(db, req);
+		const user = await findUser(db, req.username);
 		if(user && await Bcrypt.compare(req.password, user.password)) {
 			const session = await createSession(db, user.userId);
 			if(session) {
