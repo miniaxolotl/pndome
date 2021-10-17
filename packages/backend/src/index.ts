@@ -9,7 +9,7 @@ import websockify from 'koa-websocket';
 
 import { PrismaClient } from '@prisma/client'
 
-import { Session } from 'pndome';
+import { Session } from 'pndome/lib/service';
 
 import { FileController, OAuthController, SessionController } from './controller';
 
