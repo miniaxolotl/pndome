@@ -3,8 +3,7 @@ import Router from 'koa-router';
 
 import { PrismaClient } from '@prisma/client';
 
-import { validateAuthorization } from '../../middleware';
-import { Bcrypt, StatusCodes } from 'pndome/lib/util';
+import { StatusCodes } from 'pndome/lib/util';
 import { createUser, findUser, validateCreateUserRequest } from 'pndome/lib/service/User';
 
 const router: Router = new Router();
@@ -49,5 +48,5 @@ const router: Router = new Router();
 });
 
 export {
-	router as FileController
+	router as UserController
 };

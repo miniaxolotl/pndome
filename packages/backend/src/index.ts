@@ -11,7 +11,7 @@ import { PrismaClient } from '@prisma/client'
 
 import { Session } from 'pndome/lib/service';
 
-import { FileController, OAuthController, SessionController } from './controller';
+import { FileController, OAuthController, SessionController, UserController } from './controller';
 
 import config from '../../../server.config'
 
@@ -71,6 +71,7 @@ app.use(BodyParser());
 	const API: Router = new Router();
 
 	API.use(['/f', '/file'], FileController.routes());
+	API.use(['/u', '/user'], UserController.routes());
 
 	API.use(['/a', '/auth'], SessionController.routes());
 	API.use(['/oa', '/oauth'], OAuthController.routes());
