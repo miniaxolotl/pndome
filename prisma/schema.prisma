@@ -69,7 +69,7 @@ model User {
 
 	email					 	String				@db.VarChar(255) @unique
 
-	roles					 	String				@db.VarChar(255)
+	roles					 	String?				@db.VarChar(255) @default("user")
 
 	folders					Folder[]
 

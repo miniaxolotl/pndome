@@ -61,7 +61,7 @@ export const createUser = async (db: PrismaClient, user: RegisterRequstType) => 
 				userId: userId,
 				username: user.username,
 				password: passwordHash,
-				email: user.email,
+				email: user.email
 			}
 		});
 	}
