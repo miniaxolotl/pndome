@@ -67,7 +67,11 @@ export const revokeSession = async (db: PrismaClient, sessionId: string) => {
 export const findUser = async (db: PrismaClient, username: string) => {
 	return db.user.findFirst({
 		where:{
-			username: username
+			OR: [{
+				username: username
+			},{
+				userId: username
+			}]
 		}
 	})
 };

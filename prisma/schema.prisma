@@ -1,130 +1,161 @@
 datasource db {
-	provider = "mysql"
-	url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-	provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 model File {
 
-	fileId 			String				@id @db.VarChar(16) @unique
+  fileId String @id @unique @db.VarChar(16)
 
-	folderId 		String				@db.VarChar(16)
+  folderId String @db.VarChar(16)
 
-	name 				String				@db.VarChar(255)
+  name String @db.VarChar(255)
 
-	type     		String				@db.VarChar(32)
+  type String @db.VarChar(32)
 
-	ext     		String				@db.VarChar(32)
+  ext String @db.VarChar(32)
 
-	bytes     	Int						@db.UnsignedInt
+  bytes Int @db.UnsignedInt
 
-	sha256    	String				@db.VarChar(64)
+  sha256 String @db.VarChar(64)
 
-	md5     		String				@db.VarChar(32)
+  md5 String @db.VarChar(32)
 
-	dCount    	Int						@db.UnsignedInt
+  dCount Int @db.UnsignedInt
 
-	vCount    	Int						@db.UnsignedInt
+  vCount Int @db.UnsignedInt
 
-	deleted   	Boolean  			@default(false)
+	created DateTime @default(now())
 
-	folder			Folder  			@relation(fields: [folderId], references: [folderId])
+  deleted Boolean @default(false)
 
-	@@index([fileId, folderId])
+  folder Folder @relation(fields: [folderId], references: [folderId])
 
+  @@index([fileId, folderId])
 }
 
 model Folder {
 
-	folderId 		String				@id @db.VarChar(16)
+  folderId String @id @db.VarChar(16)
 
-	userId 			String				@db.VarChar(16)
+  userId String @db.VarChar(16)
 
-	name 				String				@db.VarChar(255)
+  name String @db.VarChar(255)
 
-	password 		String				@db.VarChar(255)
+  password String @db.VarChar(255)
 
-	protected 	Boolean  			@default(true)
+  protected Boolean @default(true)
 
-	dCount    	Int						@db.UnsignedInt
+  dCount Int @db.UnsignedInt
 
-	vCount    	Int						@db.UnsignedInt
+  vCount Int @db.UnsignedInt
 
-	files				File[]
+  created DateTime @default(now()) @db.Timestamp
 
-	users				User   				@relation(fields: [userId], references: [userId])
+  files File[]
+
+  users User @relation(fields: [userId], references: [userId])
+
+}
+
+model Role {
+
+  roleId String @id @db.VarChar(16) @unique
+
+  users UserRole[]
 
 }
 
 model User {
 
-	userId 					String				@id @db.VarChar(16)
+  userId String @id @db.VarChar(16)
 
-	username 				String				@db.VarChar(255) @unique
+  username String @unique @db.VarChar(255)
 
-	password 				String				@db.VarChar(255)
+  password String @db.VarChar(255)
 
-	email					 	String				@db.VarChar(255) @unique
+  email String @unique @db.VarChar(255)
 
-	roles					 	String?				@db.VarChar(255) @default("user")
+  created DateTime @default(now()) @db.Timestamp
 
-	folders					Folder[]
+  roles UserRole[]
 
-	sessions				Session[]
+  folders Folder[]
 
-	tokens					Token[]
+  sessions Session[]
+
+  tokens Token[]
 
 }
 
 model Client {
 
-	clientId				String				@id @db.VarChar(255)
+  clientId String @id @db.VarChar(255)
 
-	clientSecret 		String				@db.VarChar(16) @unique
+  clientSecret String @unique @db.VarChar(16)
 
-	redirectUri 		String 		 		@db.VarChar(255)
+  redirectUri String @db.VarChar(255)
 
-	scope 					String 				@db.VarChar(255)
-
-	@@index([clientId, clientSecret])
+  scope String @db.VarChar(255)
 	
+  created DateTime @default(now()) @db.Timestamp
+
+	disabled Boolean @default(false)
+
+  @@index([clientId, clientSecret])
 }
 
 model Session {
 
-	sessionId 	String				@id @db.VarChar(64)
+  sessionId String @id @db.VarChar(64)
 
-	userId 			String				@db.VarChar(16)
+  userId String @db.VarChar(16)
 
-	valid 			Boolean 		 	@default(true)
+  valid Boolean @default(true)
 
-	created 		DateTime 		 	@db.Timestamp @default(now())
+  created DateTime @default(now()) @db.Timestamp
 
-	expires 		DateTime 			@db.Timestamp
+  expires DateTime @db.Timestamp
 
-	users				User   				@relation(fields: [userId], references: [userId])
-	
-	@@index([sessionId, userId])
+  users User @relation(fields: [userId], references: [userId])
 
+  @@index([sessionId, userId])
 }
 
 model Token {
 
-	tokenId			String				@id @db.VarChar(255)
+  tokenId String @id @db.VarChar(255)
 
-	userId 			String				@db.VarChar(16)
+  userId String @db.VarChar(16)
 
-	valid 			Boolean 		 	@default(true)
+  valid Boolean @default(true)
 
-	created 		DateTime 		 	@db.Timestamp @default(now())
+  created DateTime @default(now()) @db.Timestamp
 
-	expires 		DateTime 			@db.Timestamp
-	
-	users				User   				@relation(fields: [userId], references: [userId])
+  expires DateTime @db.Timestamp
 
-	@@index([tokenId, userId])
+  users User @relation(fields: [userId], references: [userId])
 
+  @@index([tokenId, userId])
+}
+
+model UserRole {
+
+  id Int @id @default(autoincrement())
+
+  roleId String @db.VarChar(16)
+
+  userId String @db.VarChar(16)
+
+  created DateTime @default(now()) @db.Timestamp
+
+  role Role? @relation(fields: [roleId], references: [roleId])
+
+  user User? @relation(fields: [userId], references: [userId])
+
+  @@unique([roleId, userId])
 }

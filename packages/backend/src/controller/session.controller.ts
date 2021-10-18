@@ -5,6 +5,7 @@ import Joi from 'joi';
 
 import { Bcrypt, StatusCodes } from 'pndome/lib/util';
 import { createSession, findUser, revokeSession, validateLoginRequest } from 'pndome/lib/service/Session';
+import { findRoles } from 'pndome/lib/service/User';
 
 const router: Router = new Router();
 
@@ -12,7 +13,7 @@ const router: Router = new Router();
  * routes
  ************************************************/
 
-router.post('/login', async (ctx: ParameterizedContext) => {
+router.post('/', async (ctx: ParameterizedContext) => {
 	const body = ctx.request.body;
 	const db: PrismaClient = ctx.db;
 
@@ -20,7 +21,7 @@ router.post('/login', async (ctx: ParameterizedContext) => {
 
 	if(req) {
 		const user = await findUser(db, req.username);
-		if(user && await Bcrypt.compare(req.password, user.password)) {
+		if(user && await Bcrypt.compare(req.password, user.password!)) {
 			const session = await createSession(db, user.userId);
 			if(session) {
 				ctx.status = StatusCodes.SUCCESS.OK.status;
@@ -29,6 +30,7 @@ router.post('/login', async (ctx: ParameterizedContext) => {
 					userId: user.userId,
 					username: user.username,
 					email: user.email,
+					roles:  (await findRoles(db, req.username)).map((val) => val.roleId)
 				};
 				return;
 			} else {
