@@ -1,5 +1,6 @@
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
+import { StatusCodes } from 'pndome/lib/util';
 
 const router: Router = new Router();
 
@@ -8,7 +9,8 @@ const router: Router = new Router();
  ************************************************/
 
 router.get('/', async (ctx: ParameterizedContext) => {
-	ctx.body = 'Hello World';
+	ctx.status = StatusCodes.SERVER_ERROR.NOT_IMPLEMENTED.status;
+	ctx.body = StatusCodes.SERVER_ERROR.NOT_IMPLEMENTED.message;
 });
 
 export {
