@@ -1,57 +1,82 @@
-import { PrismaClient } from ".prisma/client";
+import { Prisma, PrismaClient } from ".prisma/client";
 import { uid } from "uid/secure";
 import { Bcrypt } from "../packages/pndome/lib/util";
 
-import config from '../server.config'
+import config from "../server.config";
 
 const db = new PrismaClient();
 
 (async () => {
-	try {
-		console.log("-roles:")
-		await db.role.createMany({
-			data: [
-				{
-					"roleId": "admin",
-				},
-				{
-					"roleId": "moderator",
-				},
-				{
-					"roleId": "user",
-				},
-				{
-					"roleId": "disabled",
-				},
-			]
-		})
-	console.log("fin")
-	} catch {
-		console.log("!!!err")
-	}
+  const roleData: Prisma.RoleCreateInput[] = [
+    {
+      roleId: "developer",
+      authority: 1,
+    },
+    {
+      roleId: "admin",
+      authority: 2,
+    },
+    {
+      roleId: "moderator",
+      authority: 3,
+    },
+    {
+      roleId: "pro_user",
+      authority: 4,
+    },
+    {
+      roleId: "user",
+      authority: 5,
+    },
+    {
+      roleId: "disabled",
+      authority: 0,
+    },
+  ];
 
-	try {
-		console.log("-user:")
-		const passwordHash: string | null = await Bcrypt.genHash(config.ADMIN_PASS);
-		await db.user.create({
-			data: {
-				userId: uid(16),
-				email: config.ADMIN_EMAIL,
-				username: config.ADMIN_USER,
-				password: passwordHash,
-				roles: {
-					create: [{
-						roleId: "admin"
-					}, {
-						roleId: "user"
-					}]
-				}
-			}
-		})
-		console.log("fin")
-	} catch {
-		console.log("!!!err")
-	}
-	
-	console.log("--COMPLETE--")
+  const userData = [
+    {
+      userId: uid(16),
+      email: config.ADMIN_EMAIL,
+      username: config.ADMIN_USER,
+      password: await Bcrypt.genHash(config.ADMIN_PASS),
+      roles: {
+        create: [
+          {
+            roleId: "developer",
+          },
+          {
+            roleId: "admin",
+          },
+          {
+            roleId: "user",
+          },
+        ],
+      },
+    },
+  ];
+
+  console.log("/**************** seeding ****************/");
+
+  console.log("\n---- role ----");
+
+  /************* ROLE *************/
+  for (const r of roleData) {
+    const role = await db.role.create({
+      data: r,
+    });
+    console.log(`created role: ${role.roleId}`);
+  }
+
+  console.log("\n---- user ----");
+
+  /************* USER *************/
+  for (const u of userData) {
+    const user = await db.user.create({
+      data: u,
+    });
+    console.log(
+      `created user: #${user.userId}\n ${user.email}\n ${user.password}\n`
+    );
+  }
 })();
