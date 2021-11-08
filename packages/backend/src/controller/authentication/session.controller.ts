@@ -6,8 +6,6 @@ import Joi from "joi";
 import { Bcrypt, StatusCodes } from "pndome/lib/util";
 import {
   createSession,
-  findUser,
-  findUserById,
   findUserByUsername,
   revokeSession,
   validateLoginRequest,
