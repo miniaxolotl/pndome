@@ -29,7 +29,7 @@ model File {
 
   vCount Int @db.UnsignedInt
 
-	created DateTime @default(now())
+  created DateTime @default(now())
 
   deleted Boolean @default(false)
 
@@ -64,7 +64,9 @@ model Folder {
 
 model Role {
 
-  roleId String @id @db.VarChar(16) @unique
+  roleId String @id @unique @db.VarChar(16)
+
+  authority Int @unique @db.UnsignedTinyInt
 
   users UserRole[]
 
@@ -101,10 +103,10 @@ model Client {
   redirectUri String @db.VarChar(255)
 
   scope String @db.VarChar(255)
-	
+
   created DateTime @default(now()) @db.Timestamp
 
-	disabled Boolean @default(false)
+  disabled Boolean @default(false)
 
   @@index([clientId, clientSecret])
 }
