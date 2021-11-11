@@ -1,10 +1,7 @@
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
 
-import { PrismaClient } from '@prisma/client';
-
-import { validateAuthorization } from '../../middleware';
-import { StatusCodes } from 'pndome/lib/util';
+import { StatusCodes } from 'lib/src';
 
 const router: Router = new Router();
 
@@ -12,28 +9,9 @@ const router: Router = new Router();
  * routes
  ************************************************/
 
-router.post('/',
- validateAuthorization({ passthrough: false, }),
- async (ctx: ParameterizedContext) => {
-	const body = ctx.request.body;
-	const db: PrismaClient = ctx.db;
-	 
-	ctx.status = StatusCodes.SUCCESS.OK.status;
-	ctx.body = StatusCodes.SUCCESS.OK.message;
- }
-);
+router.all('/', async (ctx: ParameterizedContext) => {
+  ctx.status = StatusCodes.SERVER_ERROR.NOT_IMPLEMENTED.status;
+  ctx.body = StatusCodes.SERVER_ERROR.NOT_IMPLEMENTED.message;
+}); // {post} /file
 
-router.get('/:fileId',
-validateAuthorization({ passthrough: true, }),
-	async (ctx: ParameterizedContext) => {
-		const body = ctx.request.body;
-		const db: PrismaClient = ctx.db;
-		
-		ctx.status = StatusCodes.SUCCESS.OK.status;
-		ctx.body = StatusCodes.SUCCESS.OK.message;
-	}
-);
-
-export {
-	router as FileController
-};
+export { router as FileController };

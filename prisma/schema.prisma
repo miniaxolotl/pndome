@@ -7,157 +7,109 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model File {
+model User {
+  userId   String    @db.VarChar(16)
+  email    String    @unique @db.VarChar(255)
+  username String    @unique @db.VarChar(255)
+  password String    @db.VarChar(255)
+  deleted  DateTime?
+  created  DateTime  @default(now())
+  updated  DateTime  @updatedAt
 
-  fileId String @id @unique @db.VarChar(16)
+  roles    UserRole[]
+  sessions Session[]
+  folders  UserFolder[]
 
-  folderId String @db.VarChar(16)
-
-  name String @db.VarChar(255)
-
-  type String @db.VarChar(32)
-
-  ext String @db.VarChar(32)
-
-  bytes Int @db.UnsignedInt
-
-  sha256 String @db.VarChar(64)
-
-  md5 String @db.VarChar(32)
-
-  dCount Int @db.UnsignedInt
-
-  vCount Int @db.UnsignedInt
-
-  created DateTime @default(now())
-
-  deleted Boolean @default(false)
-
-  folder Folder @relation(fields: [folderId], references: [folderId])
-
-  @@index([fileId, folderId])
-}
-
-model Folder {
-
-  folderId String @id @db.VarChar(16)
-
-  userId String @db.VarChar(16)
-
-  name String @db.VarChar(255)
-
-  password String @db.VarChar(255)
-
-  protected Boolean @default(true)
-
-  dCount Int @db.UnsignedInt
-
-  vCount Int @db.UnsignedInt
-
-  created DateTime @default(now()) @db.Timestamp
-
-  files File[]
-
-  users User @relation(fields: [userId], references: [userId])
-
+  @@id([userId])
 }
 
 model Role {
-
-  roleId String @id @unique @db.VarChar(16)
-
-  authority Int @unique @db.UnsignedTinyInt
+  roleId    String @db.VarChar(16)
+  authority Int    @unique @db.UnsignedTinyInt
 
   users UserRole[]
 
-}
-
-model User {
-
-  userId String @id @db.VarChar(16)
-
-  username String @unique @db.VarChar(255)
-
-  password String @db.VarChar(255)
-
-  email String @unique @db.VarChar(255)
-
-  created DateTime @default(now()) @db.Timestamp
-
-  roles UserRole[]
-
-  folders Folder[]
-
-  sessions Session[]
-
-  tokens Token[]
-
-}
-
-model Client {
-
-  clientId String @id @db.VarChar(255)
-
-  clientSecret String @unique @db.VarChar(16)
-
-  redirectUri String @db.VarChar(255)
-
-  scope String @db.VarChar(255)
-
-  created DateTime @default(now()) @db.Timestamp
-
-  disabled Boolean @default(false)
-
-  @@index([clientId, clientSecret])
-}
-
-model Session {
-
-  sessionId String @id @db.VarChar(64)
-
-  userId String @db.VarChar(16)
-
-  valid Boolean @default(true)
-
-  created DateTime @default(now()) @db.Timestamp
-
-  expires DateTime @db.Timestamp
-
-  users User @relation(fields: [userId], references: [userId])
-
-  @@index([sessionId, userId])
-}
-
-model Token {
-
-  tokenId String @id @db.VarChar(255)
-
-  userId String @db.VarChar(16)
-
-  valid Boolean @default(true)
-
-  created DateTime @default(now()) @db.Timestamp
-
-  expires DateTime @db.Timestamp
-
-  users User @relation(fields: [userId], references: [userId])
-
-  @@index([tokenId, userId])
+  @@id([roleId])
 }
 
 model UserRole {
+  roleId  String   @db.VarChar(16)
+  userId  String   @db.VarChar(16)
+  created DateTime @default(now())
 
-  id Int @id @default(autoincrement())
+  role Role @relation(fields: [roleId], references: [roleId])
+  user User @relation(fields: [userId], references: [userId])
 
-  roleId String @db.VarChar(16)
+  @@id([roleId, userId])
+}
 
-  userId String @db.VarChar(16)
+model Session {
+  sessionId String    @unique @db.VarChar(64)
+  userId    String    @db.VarChar(16)
+  revoked   Boolean   @default(false)
+  created   DateTime  @default(now())
+  expires   DateTime?
 
-  created DateTime @default(now()) @db.Timestamp
+  user User @relation(fields: [userId], references: [userId])
 
-  role Role? @relation(fields: [roleId], references: [roleId])
+  @@id([sessionId, userId])
+}
 
-  user User? @relation(fields: [userId], references: [userId])
+model Folder {
+  folderId  String    @db.VarChar(16)
+  name      String    @db.VarChar(255)
+  password  String?   @db.VarChar(255)
+  protected Boolean   @default(true)
+  dCount    Int       @db.UnsignedInt
+  vCount    Int       @db.UnsignedInt
+  deleted   DateTime?
+  created   DateTime  @default(now())
+  updated   DateTime  @updatedAt
 
-  @@unique([roleId, userId])
+  files File[]
+  users UserFolder[]
+
+  @@id([folderId])
+}
+
+model File {
+  fileId   String    @unique @db.VarChar(16)
+  folderId String    @db.VarChar(16)
+  name     String    @db.VarChar(255)
+  type     String    @db.VarChar(32)
+  ext      String    @db.VarChar(32)
+  bytes    Int       @db.UnsignedInt
+  sha256   String    @db.VarChar(64)
+  md5      String    @db.VarChar(32)
+  dCount   Int       @db.UnsignedInt
+  vCount   Int       @db.UnsignedInt
+  deleted  DateTime?
+  created  DateTime  @default(now())
+  updated  DateTime  @updatedAt
+
+  folder     Folder          @relation(fields: [folderId], references: [folderId])
+  timestamps FileTimestamp[]
+
+  @@id([fileId, folderId])
+}
+
+model UserFolder {
+  userId   String  @db.VarChar(16)
+  folderId String  @db.VarChar(16)
+  owner    Boolean @default(false)
+
+  user User   @relation(fields: [userId], references: [userId])
+  file Folder @relation(fields: [folderId], references: [folderId])
+
+  @@id([userId, folderId])
+}
+
+model FileTimestamp {
+  fileId  String   @db.VarChar(16)
+  type    Int      @db.UnsignedTinyInt
+  created DateTime @default(now())
+
+  file File @relation(fields: [fileId], references: [fileId])
+
+  @@id([fileId])
 }

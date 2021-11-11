@@ -1,6 +1,7 @@
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
-import { StatusCodes } from 'pndome/lib/util';
+
+import { StatusCodes } from 'lib/src';
 
 const router: Router = new Router();
 
@@ -8,11 +9,9 @@ const router: Router = new Router();
  * routes
  ************************************************/
 
-router.get('/', async (ctx: ParameterizedContext) => {
-	ctx.status = StatusCodes.SERVER_ERROR.NOT_IMPLEMENTED.status;
-	ctx.body = StatusCodes.SERVER_ERROR.NOT_IMPLEMENTED.message;
-});
+router.all('/', async (ctx: ParameterizedContext) => {
+  ctx.status = StatusCodes.SERVER_ERROR.NOT_IMPLEMENTED.status;
+  ctx.body = StatusCodes.SERVER_ERROR.NOT_IMPLEMENTED.message;
+}); // {post} /oauth
 
-export {
-	router as OAuthController,
-};
+export { router as OAuthController };

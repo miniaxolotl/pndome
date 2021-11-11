@@ -10,17 +10,18 @@
 		"type": "git",
 		"url": "git+https://github.com/theluckyegg/pndome.git"
 	},
+	"main": "src/index.ts",
 	"scripts": {
 		"test": "jest",
-		"watch": "nodemon --watch 'src/**/*' --watch 'spec/**/*' -e ts,tsx --exec ts-node ./src/index.ts",
+		"watch": "nodemon --watch 'src/**/*' --watch 'spec/**/*' -e ts,tsx --exec ts-node ./src/server.ts",
 		"serve": "yarn watch",
 		"build": "tsc",
-		"start": "node dist/src/index.ts"
+		"start": "node dist/src/server.ts"
 	},
 	"bugs": {
 		"url": "https://github.com/theluckyegg/pndome/issues"
 	},
 	"dependencies": {
-		"pndome": "^0.0.0"
+		"lib": "^0.0.0"
 	}
 }

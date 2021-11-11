@@ -17,6 +17,6 @@
 		"url": "https://github.com/theluckyegg/pndome/issues"
 	},
 	"dependencies": {
-		"pndome": "^0.0.0"
+		"lib": "^0.0.0"
 	}
 }
