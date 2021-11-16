@@ -3,7 +3,7 @@ import { uid } from 'uid/secure';
 
 import { UserValues } from '@lib/type';
 import { genHash } from '@lib/util';
-import { filter, omit, pick } from 'lodash';
+import { omit } from 'lodash';
 
 const db = new PrismaClient();
 
@@ -21,11 +21,7 @@ const create = async (data: UserValues) => {
       username: data.username,
       password: password,
       email: data.email,
-      roles: {
-        create: {
-          roleId: 'user',
-        },
-      },
+      roles: { create: { roleId: 'user' } },
     },
   });
   return omit(await result, ['password']);
@@ -38,12 +34,8 @@ const create = async (data: UserValues) => {
  */
 export const activate = async (userId: string) => {
   const result = db.user.update({
-    where: {
-      userId,
-    },
-    data: {
-      deleted: null,
-    },
+    where: { userId },
+    data: { deleted: null },
   });
   return omit(await result, ['password']);
 };
@@ -55,12 +47,8 @@ export const activate = async (userId: string) => {
  */
 export const deactivate = async (userId: string) => {
   const result = db.user.update({
-    where: {
-      userId,
-    },
-    data: {
-      deleted: new Date(),
-    },
+    where: { userId },
+    data: { deleted: new Date() },
   });
   return omit(await result, ['password']);
 };
@@ -72,12 +60,7 @@ export const deactivate = async (userId: string) => {
  * @returns database result
  */
 export const addRole = async (userId: string, roleId: string) => {
-  return db.userRole.create({
-    data: {
-      userId,
-      roleId,
-    },
-  });
+  return db.userRole.createMany({ data: { userId, roleId } });
 };
 
 /**
@@ -88,13 +71,18 @@ export const addRole = async (userId: string, roleId: string) => {
  */
 export const deleteRole = async (userId: string, roleId: string) => {
   return db.userRole.delete({
-    where: {
-      roleId_userId: {
-        userId,
-        roleId,
-      },
-    },
+    where: { roleId_userId: { userId, roleId } },
   });
+};
+
+/**
+ * find a role on a user
+ * @param userId id of user to find
+ * @param roleId name of role to find
+ * @returns database result
+ */
+export const hasRole = async (userId: string, roleId: string) => {
+  return db.userRole.findFirst({ where: { userId, roleId } });
 };
 
 /**
@@ -114,9 +102,7 @@ const findByAll = async ({ page, take }) => {
  */
 const findById = async (userId: string) => {
   const result = await db.user.findUnique({
-    where: {
-      userId,
-    },
+    where: { userId },
   });
   return omit(result, ['password']);
 };
@@ -129,12 +115,7 @@ const findById = async (userId: string) => {
  */
 const findByEmailOrUsername = async (email: string, username: string) => {
   const result = await db.user.findFirst({
-    where: {
-      OR: {
-        email,
-        username,
-      },
-    },
+    where: { OR: { email, username } },
   });
   return omit(result, ['password']);
 };
@@ -145,6 +126,7 @@ export const UserHelper = {
   deactivate,
   addRole,
   deleteRole,
+  hasRole,
   findByAll,
   findById,
   findByEmailOrUsername,

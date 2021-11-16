@@ -20,7 +20,7 @@ export const ValidateParam = (Schema: Joi.ObjectSchema) => {
       });
       return;
     } else {
-      ctx.data = value;
+      ctx.param = value;
       await next();
     }
   };
