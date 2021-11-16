@@ -13,7 +13,7 @@
 	"main": "src/index.ts",
 	"scripts": {
 		"test": "jest",
-		"watch": "nodemon --watch 'src/**/*' --watch 'spec/**/*' -e ts,tsx --exec ts-node ./src/server.ts",
+		"watch": "nodemon --watch '../**/src/**/*' --watch 'spec/**/*' -e ts,tsx --exec ts-node ./src/server.ts",
 		"serve": "yarn watch",
 		"build": "tsc",
 		"start": "node dist/src/server.ts"
