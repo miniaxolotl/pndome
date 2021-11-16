@@ -3,7 +3,7 @@
 		"module": "CommonJS",
 		"target": "es2019",
 		"sourceMap": true,
-		"outDir": "./dist",
+		"outDir": "./build",
 
 		/* typechecking options */
 		"strict": true,
@@ -26,31 +26,25 @@
 			"jest"
 		],
 
-		"baseUrl": "./packages/",
+		"baseUrl": "./packages",
 		"paths": {
-			"@backend/controller": ["backend/src/controller"],
-			"@backend/controller/*": ["backend/src/controller/*"],
-			// "@backend/middleware": ["backend/src/middleware"],
-			// "@backend/middleware/*": ["backend/src/middleware/*"],
-			// "@frontend": ["frontend/"],
-			// "@frontend/*": ["frontend/*"],
-			"@lib/shared": ["lib/src/shared"],
-			"@lib/shared/*": ["lib/src/shared/*"],
-			"@lib/service": ["lib/src/service/"],
-			"@lib/service/*": ["lib/src/service/*"],
-			"@lib/schema": ["lib/src/schema"],
-			"@lib/schema/*": ["lib/src/schema/*"],
-			"@lib/util": ["lib/src/util"],
-			"@lib/util/*": ["lib/src/util/*"]
+			"@backend/middleware": [ "backend/src/middleware" ],
+			"@backend/middleware/*": [ "backend/src/middleware/*" ],
+
+			"@lib/shared": [ "lib/src/shared" ],
+			"@lib/shared/*": [ "lib/src/shared/*" ],
+
+			"@lib/type": [ "lib/src/type" ],
+			"@lib/type/*": [ "lib/src/type/*" ],
+
+			"@lib/schema": [ 	"lib/src/schema" ],
+			"@lib/schema/*": [ 	"lib/src/schema/*" ],
+
+			"@lib/util": [ "lib/src/util" ],
+			"@lib/util/*": [ "lib/src/util/*" ]
 		}
 	},
 	"exclude": [
 		"node_modules/"
-	],
-	"include": [
-		"./packages/**/src/**/*",
-		"./packages/**/spec/**/*",
-		"./server.config.ts",
-		"./prisma/seed.ts",
 	]
 }

@@ -1,9 +1,10 @@
 import { Prisma, PrismaClient } from '.prisma/client';
-import _ from 'lodash';
-import { uid } from 'uid/secure';
 
 import { RoleType } from '@lib/shared';
-import { Bcrypt } from '@lib/util';
+import { genHash } from '@lib/util/bcrypt';
+
+import _ from 'lodash';
+import { uid } from 'uid/secure';
 
 import config from '../server.config';
 
@@ -17,7 +18,7 @@ const db = new PrismaClient();
       userId: uid(16),
       email: config.ADMIN_EMAIL,
       username: config.ADMIN_USER,
-      password: await Bcrypt.genHash(config.ADMIN_PASS),
+      password: await genHash(config.ADMIN_PASS),
     },
   ];
 
