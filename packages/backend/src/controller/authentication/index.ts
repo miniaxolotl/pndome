@@ -1,2 +1,2 @@
-export * from './oauth.controller';
-export * from './session.controller';
+export { SessionController } from './session';
+export { OAuthController } from './oauth';
