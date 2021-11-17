@@ -3,7 +3,7 @@ import { ParameterizedContext } from 'koa';
 import { StatusCodes } from 'lib/src';
 import _ from 'lodash';
 
-export const ValidateSchema = (Schema: Joi.ObjectSchema) => {
+export const SchemaGuard = (Schema: Joi.ObjectSchema) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {
     const body = _.isEmpty(ctx.request.body) ? ctx.request.query : ctx.request.body;
     const { value, error } = Schema.validate(body, {

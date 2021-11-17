@@ -12,19 +12,19 @@ const db = new PrismaClient();
  * @param data user data to create
  * @returns database result
  */
-const create = async (data: UserValues) => {
-  const password: string = await genHash(data.password);
+const create = async ({ username, email, password }: UserValues) => {
+  const passwordHash: string = await genHash(password);
   const userId: string = uid(16);
-  const result = db.user.create({
+  const result = await db.user.create({
     data: {
-      userId: userId,
-      username: data.username,
-      password: password,
-      email: data.email,
+      userId,
+      username,
+      password: passwordHash,
+      email,
       roles: { create: { roleId: 'user' } },
     },
   });
-  return omit(await result, ['password']);
+  return omit(result, ['password', 'deleted']);
 };
 
 /**
@@ -33,11 +33,8 @@ const create = async (data: UserValues) => {
  * @returns database result
  */
 export const activate = async (userId: string) => {
-  const result = db.user.update({
-    where: { userId },
-    data: { deleted: null },
-  });
-  return omit(await result, ['password']);
+  const result = await db.user.update({ where: { userId }, data: { deleted: null } });
+  return omit(result, ['password', 'deleted']);
 };
 
 /**
@@ -46,11 +43,8 @@ export const activate = async (userId: string) => {
  * @returns database result
  */
 export const deactivate = async (userId: string) => {
-  const result = db.user.update({
-    where: { userId },
-    data: { deleted: new Date() },
-  });
-  return omit(await result, ['password']);
+  const result = await db.user.update({ where: { userId }, data: { deleted: new Date() } });
+  return omit(result, ['password', 'deleted']);
 };
 
 /**
@@ -90,8 +84,8 @@ export const hasRole = async (userId: string, roleId: string) => {
  * @param userId id of user to find
  * @returns database result
  */
-const findByAll = async ({ page, take }) => {
-  const result = await db.user.findMany({ skip: take * (page - 1), take: take });
+const findAll = async ({ page, take }) => {
+  const result = await db.user.findMany({ skip: take * (page ?? 0), take: take });
   return result.map((user) => omit(user, ['password']));
 };
 
@@ -101,10 +95,8 @@ const findByAll = async ({ page, take }) => {
  * @returns database result
  */
 const findById = async (userId: string) => {
-  const result = await db.user.findUnique({
-    where: { userId },
-  });
-  return omit(result, ['password']);
+  const result = await db.user.findUnique({ where: { userId } });
+  return omit(result, ['password', 'deleted']);
 };
 
 /**
@@ -113,10 +105,28 @@ const findById = async (userId: string) => {
  * @param username username of user to find
  * @returns database result
  */
-const findByEmailOrUsername = async (email: string, username: string) => {
-  const result = await db.user.findFirst({
-    where: { OR: { email, username } },
-  });
+const findByEmailOrUsername = async ({ email, username }) => {
+  const result = await db.user.findFirst({ where: { OR: { email, username } } });
+  return omit(result, ['password']);
+};
+
+/**
+ * find a user by email
+ * @param email email of user to find
+ * @returns database result
+ */
+const findByEmail = async (email: string) => {
+  const result = await db.user.findFirst({ where: { email } });
+  return omit(result, ['password']);
+};
+
+/**
+ * find a user by username
+ * @param username username of user to find
+ * @returns database result
+ */
+const findByUsername = async (username: string) => {
+  const result = await db.user.findFirst({ where: { username } });
   return omit(result, ['password']);
 };
 
@@ -127,7 +137,9 @@ export const UserHelper = {
   addRole,
   deleteRole,
   hasRole,
-  findByAll,
+  findAll,
   findById,
   findByEmailOrUsername,
+  findByEmail,
+  findByUsername,
 };

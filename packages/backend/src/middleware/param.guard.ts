@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { ParameterizedContext } from 'koa';
 import { StatusCodes } from 'lib/src';
 
-export const ValidateParam = (Schema: Joi.ObjectSchema) => {
+export const ParamGuard = (Schema: Joi.ObjectSchema) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {
     const params = ctx.params;
     const { value, error } = Schema.validate(params, {

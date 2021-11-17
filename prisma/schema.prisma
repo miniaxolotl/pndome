@@ -44,11 +44,11 @@ model UserRole {
 }
 
 model Session {
-  sessionId String    @unique @db.VarChar(64)
-  userId    String    @db.VarChar(16)
-  revoked   Boolean   @default(false)
-  created   DateTime  @default(now())
-  expires   DateTime?
+  sessionId String   @unique @db.VarChar(64)
+  userId    String   @db.VarChar(16)
+  revoked   Boolean  @default(false)
+  created   DateTime @default(now())
+  expires   DateTime
 
   user User @relation(fields: [userId], references: [userId])
 

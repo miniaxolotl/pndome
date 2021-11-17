@@ -1,11 +1,14 @@
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
 
-import { ValidateParam, ValidateSchema } from '@backend/middleware';
+import { ParamGuard, SchemaGuard } from '@backend/middleware';
 import { UserValues } from '@lib/type';
 import { IdSchema, RoleSchema, RoleValues, SearchSchema, UserSchema } from '@lib/schema';
-import { CLIENT_ERROR, StatusCodes } from '@lib/shared';
+import { CLIENT_ERROR, UserRoleType, SERVER_ERROR, SUCCESS } from '@lib/shared';
 import { UserHelper } from '.';
+import _ from 'lodash';
+import { SessionGuard } from '@backend/middleware/session.guard';
+import { RoleGuard } from '@backend/middleware/role.guard';
 
 const router: Router = new Router();
 
@@ -16,32 +19,47 @@ const router: Router = new Router();
 /**
  * create a new user
  */
-router.post('/', ValidateSchema(UserSchema), async (ctx: ParameterizedContext) => {
+router.post('/', SchemaGuard(UserSchema), async (ctx: ParameterizedContext) => {
   const data: UserValues = ctx.data;
 
+  const user = await UserHelper.findByEmailOrUsername({
+    username: data.username,
+    email: data.email,
+  });
+  if (!_.isEmpty(user)) ctx.throw(CLIENT_ERROR.CONFILCT.status, 'user already exists');
+
   const result = await UserHelper.create(data);
-  if (result) return (ctx.body = result);
-  else ctx.throw(CLIENT_ERROR.CONFILCT.message, CLIENT_ERROR.CONFILCT.status);
+
+  if (result) {
+    ctx.status = SUCCESS.OK.status;
+    ctx.body = result;
+  } else {
+    ctx.throw(SERVER_ERROR.INTERNAL.status, SERVER_ERROR.INTERNAL.message);
+  }
 }); // {post} /user
 
 /**
  * get all users
  */
-router.get('/', ValidateSchema(SearchSchema), async (ctx: ParameterizedContext) => {
-  const user = await UserHelper.findByAll(ctx.data);
-  if (!user) ctx.throw(CLIENT_ERROR.NOT_FOUND.message, CLIENT_ERROR.NOT_FOUND.status);
-
-  ctx.body = user;
-}); // {get} /user/:id
+router.get(
+  '/',
+  SessionGuard(),
+  RoleGuard([UserRoleType.ADMIN]),
+  ParamGuard(SearchSchema),
+  async (ctx: ParameterizedContext) => {
+    const users = await UserHelper.findAll(ctx.param);
+    ctx.body = users;
+  },
+); // {get} /user/:id
 
 /**
  * get a user by id
  */
-router.get('/:id', ValidateParam(IdSchema), async (ctx: ParameterizedContext) => {
+router.get('/:id', ParamGuard(IdSchema), async (ctx: ParameterizedContext) => {
   const param: { id: string } = ctx.param;
 
   const user = await UserHelper.findById(param.id);
-  if (!user) ctx.throw(CLIENT_ERROR.NOT_FOUND.message, CLIENT_ERROR.NOT_FOUND.status);
+  if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
 
   ctx.body = user;
 }); // {get} /user/:id
@@ -49,14 +67,12 @@ router.get('/:id', ValidateParam(IdSchema), async (ctx: ParameterizedContext) =>
 /**
  * deactivate a user
  */
-router.delete('/:id', ValidateParam(IdSchema), async (ctx: ParameterizedContext) => {
+router.delete('/:id', ParamGuard(IdSchema), async (ctx: ParameterizedContext) => {
   const param: { id: string } = ctx.param;
 
   const user = await UserHelper.findById(param.id);
 
-  if (!user) ctx.throw(StatusCodes.CLIENT_ERROR.BAD_REQUEST.status, 'user does not exist');
-  if (user.deleted)
-    ctx.throw(StatusCodes.CLIENT_ERROR.BAD_REQUEST.status, 'user is already deactivated');
+  if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
 
   ctx.body = await UserHelper.deactivate(param.id);
 }); // {delete} /user/:id
@@ -64,14 +80,12 @@ router.delete('/:id', ValidateParam(IdSchema), async (ctx: ParameterizedContext)
 /**
  * activate a user
  */
-router.post('/:id', ValidateParam(IdSchema), async (ctx: ParameterizedContext) => {
+router.post('/:id', ParamGuard(IdSchema), async (ctx: ParameterizedContext) => {
   const param: { id: string } = ctx.param;
 
   const user = await UserHelper.findById(param.id);
 
-  if (!user) ctx.throw(StatusCodes.CLIENT_ERROR.BAD_REQUEST.status, 'user does not exist');
-  if (!user.deleted)
-    ctx.throw(StatusCodes.CLIENT_ERROR.BAD_REQUEST.status, 'user is already activated');
+  if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
 
   ctx.body = await UserHelper.activate(param.id);
 }); // {post} /user/:id
@@ -79,42 +93,42 @@ router.post('/:id', ValidateParam(IdSchema), async (ctx: ParameterizedContext) =
 /**
  * add a role to a user
  */
-router.post('/:id/:role', ValidateParam(RoleSchema), async (ctx: ParameterizedContext) => {
+router.post('/:id/:role', ParamGuard(RoleSchema), async (ctx: ParameterizedContext) => {
   const param: RoleValues = ctx.param;
 
   const user = await UserHelper.findById(param.id);
 
-  if (!user) ctx.throw(StatusCodes.CLIENT_ERROR.BAD_REQUEST.status, 'user does not exist');
+  if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
   if (await UserHelper.hasRole(param.id, param.role))
-    ctx.throw(StatusCodes.CLIENT_ERROR.CONFILCT.status, `user already has role ${param.role}`);
+    ctx.throw(CLIENT_ERROR.CONFILCT.status, `user already has role ${param.role}`);
 
   if (await UserHelper.addRole(param.id, param.role)) {
-    ctx.status = StatusCodes.SUCCESS.OK.status;
-    ctx.body = StatusCodes.SUCCESS.OK.message;
+    ctx.status = SUCCESS.OK.status;
+    ctx.body = SUCCESS.OK.message;
   } else {
-    ctx.status = StatusCodes.SERVER_ERROR.INTERNAL.status;
-    ctx.body = StatusCodes.SERVER_ERROR.INTERNAL.message;
+    ctx.status = SERVER_ERROR.INTERNAL.status;
+    ctx.body = SERVER_ERROR.INTERNAL.message;
   }
 }); // {post} /user/:id/role
 
 /**
  * delete a role from a user
  */
-router.delete('/:id/:role', ValidateParam(RoleSchema), async (ctx: ParameterizedContext) => {
+router.delete('/:id/:role', ParamGuard(RoleSchema), async (ctx: ParameterizedContext) => {
   const param: RoleValues = ctx.param;
 
   const user = await UserHelper.findById(param.id);
 
-  if (!user) ctx.throw(StatusCodes.CLIENT_ERROR.BAD_REQUEST.status, 'user does not exist');
+  if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
   if (!(await UserHelper.hasRole(param.id, param.role)))
-    ctx.throw(StatusCodes.CLIENT_ERROR.NOT_FOUND.status, `user does not have role ${param.role}`);
+    ctx.throw(CLIENT_ERROR.NOT_FOUND.status, `user does not have role ${param.role}`);
 
   if (await UserHelper.deleteRole(param.id, param.role)) {
-    ctx.status = StatusCodes.SUCCESS.OK.status;
-    ctx.body = StatusCodes.SUCCESS.OK.message;
+    ctx.status = SUCCESS.OK.status;
+    ctx.body = SUCCESS.OK.message;
   } else {
-    ctx.status = StatusCodes.SERVER_ERROR.INTERNAL.status;
-    ctx.body = StatusCodes.SERVER_ERROR.INTERNAL.message;
+    ctx.status = SERVER_ERROR.INTERNAL.status;
+    ctx.body = SERVER_ERROR.INTERNAL.message;
   }
 }); // {post} /user/:id/role
 
