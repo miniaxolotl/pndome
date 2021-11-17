@@ -1,7 +1,6 @@
+import { SERVER_ERROR } from '@lib/shared';
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
-
-import { StatusCodes } from 'lib/src';
 
 const router: Router = new Router();
 
@@ -10,8 +9,8 @@ const router: Router = new Router();
  ************************************************/
 
 router.all('/', async (ctx: ParameterizedContext) => {
-  ctx.status = StatusCodes.SERVER_ERROR.NOT_IMPLEMENTED.status;
-  ctx.body = StatusCodes.SERVER_ERROR.NOT_IMPLEMENTED.message;
+  ctx.status = SERVER_ERROR.NOT_IMPLEMENTED.status;
+  ctx.body = SERVER_ERROR.NOT_IMPLEMENTED.message;
 }); // {post} /file
 
 export { router as FileController };

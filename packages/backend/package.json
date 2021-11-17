@@ -16,7 +16,7 @@
 		"watch": "nodemon --watch '../**/src/**/*' --watch 'spec/**/*' -e ts,tsx --exec ts-node -r tsconfig-paths/register -r ts-node ./src/server.ts",
 		"serve": "yarn watch",
 		"build": "tsc",
-		"start": "node dist/src/server.ts"
+		"start": "node ../../build/packages/backend/src/server.js"
 	},
 	"bugs": {
 		"url": "https://github.com/theluckyegg/pndome/issues"
