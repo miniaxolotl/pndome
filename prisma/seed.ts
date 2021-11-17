@@ -39,7 +39,16 @@ const db = new PrismaClient();
   /************* USER *************/
   for (const u of userData) {
     const user = await db.user.create({
-      data: u,
+      data: {
+        ...u,
+        roles: {
+          create: [
+            { roleId: RoleType.DEVELOPER.roleId },
+            { roleId: RoleType.ADMIN.roleId },
+            { roleId: RoleType.USER.roleId },
+          ],
+        },
+      },
     });
 
     console.log(`created user:#${user.userId}\n${user.email}\n${user.password}\n`);

@@ -4,8 +4,8 @@ CREATE TABLE `UserRole` (
     `userId` VARCHAR(16) NOT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    UNIQUE INDEX `UserRole_roleId_key`(`roleId`),
-    UNIQUE INDEX `UserRole_userId_key`(`userId`),
+    INDEX `UserRole_roleId_key`(`roleId`),
+    INDEX `UserRole_userId_key`(`userId`),
     PRIMARY KEY (`roleId`, `userId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
