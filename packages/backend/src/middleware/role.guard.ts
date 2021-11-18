@@ -15,11 +15,12 @@ export const RoleGuard = (roles: RoleType[]) => {
       include: { role: true },
     });
 
+    // FIXME: overengineered lol, but it works
     // NOTE: Reduce to highest authority (lowest number)
     const authority = userRoles.reduce((acc, userRole) => {
       return roles.reduce((acc, role) => {
-        return userRole.role.authority < role.authority ? userRole.role.authority : acc;
-      }, 1000) < acc
+        return userRole.role.authority <= role.authority ? userRole.role.authority : acc;
+      }, 1000) <= acc
         ? userRole.role.authority
         : acc;
     }, 1000);
