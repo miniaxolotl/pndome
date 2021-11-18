@@ -28,6 +28,20 @@ const create = async ({ username, email, password }: UserValues) => {
 };
 
 /**
+ * patch a user
+ * @param userId user to patch
+ * @param payload user data patch to apply
+ * @returns database result
+ */
+const patch = async (userId: string, payload: Omit<Partial<UserValues>, 'email'>) => {
+  const result = await db.user.update({
+    where: { userId },
+    data: payload,
+  });
+  return omit(result, ['password', 'deleted']);
+};
+
+/**
  * activate a user
  * @param userId id of user to activate
  * @returns database result
@@ -132,6 +146,7 @@ const findByUsername = async (username: string) => {
 
 export const UserHelper = {
   create,
+  patch,
   activate,
   deactivate,
   addRole,

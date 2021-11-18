@@ -53,7 +53,7 @@ router.get(
 
     ctx.body = user;
   },
-); // {get} /user/:id
+); // {get} /user/me
 
 /**
  * get all users
@@ -67,7 +67,7 @@ router.get(
     const users = await UserHelper.findAll(ctx.param);
     ctx.body = users;
   },
-); // {get} /user/:id
+); // {get} /user/
 
 /**
  * get a user by id
@@ -88,25 +88,6 @@ router.get(
 ); // {get} /user/:id
 
 /**
- * deactivate a user
- */
-router.delete(
-  '/:id',
-  SessionGuard(),
-  RoleGuard([UserRoleType.MODERATOR]),
-  ParamGuard(IdSchema),
-  async (ctx: ParameterizedContext) => {
-    const param: { id: string } = ctx.param;
-
-    const user = await UserHelper.findById(param.id);
-
-    if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
-
-    ctx.body = await UserHelper.deactivate(param.id);
-  },
-); // {delete} /user/:id
-
-/**
  * activate a user
  */
 router.post(
@@ -124,6 +105,25 @@ router.post(
     ctx.body = await UserHelper.activate(param.id);
   },
 ); // {post} /user/:id
+
+/**
+ * deactivate a user
+ */
+router.delete(
+  '/:id',
+  SessionGuard(),
+  RoleGuard([UserRoleType.MODERATOR]),
+  ParamGuard(IdSchema),
+  async (ctx: ParameterizedContext) => {
+    const param: { id: string } = ctx.param;
+
+    const user = await UserHelper.findById(param.id);
+
+    if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
+
+    ctx.body = await UserHelper.deactivate(param.id);
+  },
+); // {delete} /user/:id
 
 /**
  * add a role to a user
