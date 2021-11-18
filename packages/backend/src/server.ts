@@ -11,7 +11,13 @@ import { PrismaClient } from '@prisma/client';
 
 import config from '../../../server.config';
 
-import { FileController, UserController, SessionController, OAuthController } from '.';
+import {
+  FileController,
+  UserController,
+  SessionController,
+  OAuthController,
+  RoleController,
+} from '.';
 
 /************************************************
  * setup
@@ -75,6 +81,7 @@ app.use(BodyParser());
   const API: Router = new Router();
 
   API.use(['/f', '/file'], FileController.routes());
+  API.use(['/r', '/role'], RoleController.routes());
   API.use(['/u', '/user'], UserController.routes());
 
   API.use(['/auth'], SessionController.routes());
