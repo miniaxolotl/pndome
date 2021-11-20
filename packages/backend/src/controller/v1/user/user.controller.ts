@@ -3,7 +3,7 @@ import Router from 'koa-router';
 
 import { JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
 import { UserValues } from '@lib/type';
-import { IdSchema, RoleSchema, RoleValues, SearchSchema, UserSchema } from '@lib/schema';
+import { IdSchema, RoleSchema, RoleValues, SearchSchema, CreateUserSchema } from '@lib/schema';
 import { CLIENT_ERROR, UserRoleType, SERVER_ERROR, SUCCESS } from '@lib/shared';
 import { UserHelper } from '.';
 import _ from 'lodash';
@@ -18,7 +18,7 @@ const router: Router = new Router();
 /**
  * create a new user
  */
-router.post('/', SchemaGuard(UserSchema), async (ctx: ParameterizedContext) => {
+router.post('/', SchemaGuard(CreateUserSchema), async (ctx: ParameterizedContext) => {
   const data: UserValues = ctx.data;
 
   const user = await UserHelper.findByEmailOrUsername({

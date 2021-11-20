@@ -16,7 +16,14 @@ export const CreateUserSchema = Joi.object({
 
   password: Joi.string().min(8).max(256).trim().required(),
 
-  confirmPassword: Joi.string().min(8).max(256).trim().required(),
+  confirmPassword: Joi.string()
+    .label('Password confirmation')
+    .min(8)
+    .max(256)
+    .trim()
+    .valid(Joi.ref('password'))
+    .options({ messages: { 'any.only': '{{#label}} does not match' } })
+    .required(),
 });
 
 export const UserIdSchema = Joi.object({
