@@ -1,3 +1,4 @@
+export * from './db';
 export * from './shared';
 export * from './schema';
 export * from './type';

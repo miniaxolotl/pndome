@@ -2,10 +2,8 @@ import { v4 as uuid } from 'uuid';
 
 import { LoginValues } from '@lib/schema';
 import { compare } from '@lib/util';
-import { PrismaClient } from '@prisma/client';
 import { omit } from 'lodash';
-
-const db = new PrismaClient();
+import { db } from 'lib/src';
 
 const login = async ({ username, password }: LoginValues) => {
   const user = await db.user.findFirst({

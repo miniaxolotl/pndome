@@ -1,11 +1,10 @@
-import { PrismaClient } from '@prisma/client';
 import { uid } from 'uid/secure';
 
 import { UserValues } from '@lib/type';
 import { genHash } from '@lib/util';
 import { omit } from 'lodash';
 
-const db = new PrismaClient();
+import { db } from 'lib/src';
 
 /**
  * create a new user

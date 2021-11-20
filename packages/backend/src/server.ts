@@ -6,8 +6,7 @@ import KoaJSON from 'koa-json';
 import KoaSession from 'koa-session';
 import Router from 'koa-router';
 import websockify from 'koa-websocket';
-
-import { PrismaClient } from '@prisma/client';
+import logger from 'koa-logger';
 
 import config from '../../../server.config';
 
@@ -18,6 +17,7 @@ import {
   OAuthController,
   RoleController,
 } from '.';
+import { connectDB } from 'lib/src';
 
 /************************************************
  * setup
@@ -35,10 +35,9 @@ const socket_router = new Router();
  * database
  ************************************************/
 
-app.context.db = new PrismaClient();
-if (app.context.db) {
-  console.log('connected successfully to database');
-}
+(async () => {
+  await connectDB();
+})();
 
 /************************************************
  * middleware
@@ -67,6 +66,10 @@ app.use(
 app.use(KoaJSON({ pretty: false, param: 'pretty' }));
 
 app.use(BodyParser());
+
+if (config.DEVELOPMENT) {
+  app.use(logger());
+}
 
 /************************************************
  * authentication

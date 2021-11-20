@@ -1,11 +1,9 @@
+import { db } from 'lib/src';
 import { CLIENT_ERROR } from '@lib/shared';
-import { PrismaClient } from '@prisma/client';
 import { ParameterizedContext } from 'koa';
 
 export const SessionGuard = (options?: { passthrough?: boolean }) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {
-    const db: PrismaClient = ctx.db;
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const authorization_key = ctx.headers.authorization ?? (ctx.session as any).sessionId;
 

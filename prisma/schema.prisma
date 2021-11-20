@@ -104,12 +104,22 @@ model UserFolder {
   @@id([userId, folderId])
 }
 
+model FileTimestampType {
+  typeId Int    @default(autoincrement())
+  type   String @db.VarChar(16)
+
+  timestamps FileTimestamp[]
+
+  @@id([typeId])
+}
+
 model FileTimestamp {
   fileId  String   @db.VarChar(16)
-  type    Int      @db.UnsignedTinyInt
+  typeId  Int
   created DateTime @default(now())
 
-  file File @relation(fields: [fileId], references: [fileId])
+  File File?             @relation(fields: [fileId], references: [fileId])
+  type FileTimestampType @relation(fields: [typeId], references: [typeId])
 
   @@id([fileId])
 }

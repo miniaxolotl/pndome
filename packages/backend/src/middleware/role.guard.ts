@@ -1,14 +1,13 @@
 import { CLIENT_ERROR } from '@lib/shared';
 import { RoleType } from '@lib/type';
-import { PrismaClient } from '@prisma/client';
+import { db } from 'lib/src';
+
 import { ParameterizedContext } from 'koa';
 
 const NO_AUTHORITY = 1000;
 
 export const RoleGuard = (roles: RoleType[]) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {
-    const db: PrismaClient = ctx.db;
-
     const userRoles = await db.userRole.findMany({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       where: { userId: (ctx.session as any).user.userId },
