@@ -10,8 +10,6 @@ export const ParamGuard = (Schema: Joi.ObjectSchema) => {
       errors: { escapeHtml: true },
     });
     if (error) {
-      console.log(error);
-
       ctx.status = StatusCodes.CLIENT_ERROR.BAD_REQUEST.status;
       ctx.body = [];
       error.details.forEach((e) => {

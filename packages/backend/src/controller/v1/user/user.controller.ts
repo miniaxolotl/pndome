@@ -1,13 +1,12 @@
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
 
-import { ParamGuard, SchemaGuard } from '@backend/middleware';
+import { JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
 import { UserValues } from '@lib/type';
 import { IdSchema, RoleSchema, RoleValues, SearchSchema, UserSchema } from '@lib/schema';
 import { CLIENT_ERROR, UserRoleType, SERVER_ERROR, SUCCESS } from '@lib/shared';
 import { UserHelper } from '.';
 import _ from 'lodash';
-import { SessionGuard } from '@backend/middleware/session.guard';
 import { RoleGuard } from '@backend/middleware/role.guard';
 
 const router: Router = new Router();
@@ -43,7 +42,7 @@ router.post('/', SchemaGuard(UserSchema), async (ctx: ParameterizedContext) => {
  */
 router.get(
   '/me',
-  SessionGuard(),
+  JWTGuard(),
   RoleGuard([UserRoleType.USER]),
   ParamGuard(SearchSchema),
   async (ctx: ParameterizedContext) => {
@@ -60,7 +59,7 @@ router.get(
  */
 router.get(
   '/',
-  SessionGuard(),
+  JWTGuard(),
   RoleGuard([UserRoleType.ADMIN]),
   ParamGuard(SearchSchema),
   async (ctx: ParameterizedContext) => {
@@ -74,7 +73,7 @@ router.get(
  */
 router.get(
   '/:id',
-  SessionGuard(),
+  JWTGuard(),
   RoleGuard([UserRoleType.ADMIN]),
   ParamGuard(IdSchema),
   async (ctx: ParameterizedContext) => {
@@ -92,7 +91,7 @@ router.get(
  */
 router.post(
   '/:id',
-  SessionGuard(),
+  JWTGuard(),
   RoleGuard([UserRoleType.MODERATOR]),
   ParamGuard(IdSchema),
   async (ctx: ParameterizedContext) => {
@@ -111,7 +110,7 @@ router.post(
  */
 router.delete(
   '/:id',
-  SessionGuard(),
+  JWTGuard(),
   RoleGuard([UserRoleType.MODERATOR]),
   ParamGuard(IdSchema),
   async (ctx: ParameterizedContext) => {
@@ -130,7 +129,7 @@ router.delete(
  */
 router.post(
   '/:id/:role',
-  SessionGuard(),
+  JWTGuard(),
   RoleGuard([UserRoleType.ADMIN]),
   ParamGuard(RoleSchema),
   async (ctx: ParameterizedContext) => {
@@ -157,7 +156,7 @@ router.post(
  */
 router.delete(
   '/:id/:role',
-  SessionGuard(),
+  JWTGuard(),
   RoleGuard([UserRoleType.ADMIN]),
   ParamGuard(RoleSchema),
   async (ctx: ParameterizedContext) => {

@@ -14,7 +14,7 @@ import {
   FileController,
   UserController,
   SessionController,
-  OAuthController,
+  JWTController,
   RoleController,
 } from '.';
 import { connectDB } from 'lib/src';
@@ -87,8 +87,8 @@ if (config.DEVELOPMENT) {
   API.use(['/r', '/role'], RoleController.routes());
   API.use(['/u', '/user'], UserController.routes());
 
-  API.use(['/auth'], SessionController.routes());
-  API.use(['/oauth2'], OAuthController.routes());
+  API.use(['/authenticate'], SessionController.routes());
+  API.use(['/auth'], JWTController.routes());
 
   router.use('/api/v1', API.routes());
 }

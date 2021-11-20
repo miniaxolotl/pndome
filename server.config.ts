@@ -2,6 +2,8 @@ export const config: {
   DEVELOPMENT: boolean;
   PORT: number;
   SESSION_KEYS: string[];
+  ENCRYPTION_KEY: string;
+  JWT_SECRET: string;
   BCRYPT_KEY: string;
   BCRYPT_SALT_ROUNDS: number;
   FILE_PATH: string;
@@ -15,6 +17,8 @@ export const config: {
   SESSION_KEYS: process.env.SESSION_KEYS
     ? JSON.parse(process.env.SESSION_KEYS)
     : ['super-duper-secret', 'even-more-secret'],
+  ENCRYPTION_KEY: process.env.ENCRYPTION_KEY ?? 'super-duper-secret',
+  JWT_SECRET: process.env.JWT_SECRET ?? 'super-duper-secret',
   BCRYPT_KEY: process.env.BCRYPT_KEY ?? 'super-duper-secret',
   BCRYPT_SALT_ROUNDS: process.env.BCRYPT_SALT_ROUNDS ? parseInt(process.env.BCRYPT_SALT_ROUNDS) : 0,
   FILE_PATH: process.env.FILE_PATH ?? '/tmp/pndome',
