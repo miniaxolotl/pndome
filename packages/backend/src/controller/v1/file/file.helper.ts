@@ -19,7 +19,7 @@ const createFile = async (data: FileValues, folderId: string) => {
     data: {
       fileId,
       name: data.name,
-      media: data.type.search(/image|video|audio/) > 0 ? true : false,
+      media: data.type.search(/image|video|audio/) >= 0 ? true : false,
       type: data.type,
       ext: data.ext,
       bytes: data.bytes,
@@ -38,13 +38,12 @@ const createFile = async (data: FileValues, folderId: string) => {
  * @param data file data to create
  * @returns cdn responce
  */
-const uploadFile = async ({ filePath, CDNPath, contentType, media }) => {
+const uploadFile = async ({ filePath, CDNPath, media }) => {
   const response = await fetch(
     `https://${media ? config.BUNNYCDN_API_MEDIA : config.BUNNYCDN_API}/uploads/${CDNPath}`,
     {
       method: 'PUT',
       headers: {
-        'Content-Type': contentType,
         AccessKey: media ? config.BUNNYCDN_API_MEDIA_KEY : config.BUNNYCDN_API_KEY,
       },
       body: createReadStream(path.join(config.FILE_PATH, filePath)),
@@ -56,7 +55,7 @@ const uploadFile = async ({ filePath, CDNPath, contentType, media }) => {
 /**
  * download file from cdn
  * @param data file data to create
- * @returns cdn responce
+ * @returns cdn response
  */
 const downloadFile = async ({ CDNPath, media }) => {
   const response = await fetch(
