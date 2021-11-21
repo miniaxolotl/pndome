@@ -1,50 +1,47 @@
 {
-	"compilerOptions": {
-		"module": "CommonJS",
-		"target": "es2019",
-		"sourceMap": true,
-		"outDir": "./build",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "esnext",
+    "sourceMap": true,
+    "outDir": "./build",
 
-		/* typechecking options */
-		"strict": true,
-		"strictPropertyInitialization": true,
-		"noImplicitAny": false,
+    /* typechecking options */
+    "strict": true,
+    "strictPropertyInitialization": true,
+    "noImplicitAny": false,
 
-		/* module resolution options */
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
-		"esModuleInterop": true,
-		"isolatedModules": false,
-		"typeRoots" : ["./node_modules/@types"],
-		
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
+    /* module resolution options */
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "isolatedModules": false,
+    "typeRoots": ["./node_modules/@types"],
 
-		"types": [
-			"lodash",
-			"node",
-			"jest"
-		],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
 
-		"baseUrl": "./packages",
-		"paths": {
-			"@backend/middleware": [ "backend/src/middleware" ],
-			"@backend/middleware/*": [ "backend/src/middleware/*" ],
+    "types": ["lodash", "node", "jest"],
 
-			"@lib/shared": [ "lib/src/shared" ],
-			"@lib/shared/*": [ "lib/src/shared/*" ],
+    "baseUrl": "./packages",
+    "paths": {
+      "@backend/middleware": ["backend/src/middleware"],
+      "@backend/middleware/*": ["backend/src/middleware/*"],
 
-			"@lib/type": [ "lib/src/type" ],
-			"@lib/type/*": [ "lib/src/type/*" ],
+      "@lib/db": ["lib/src/db"],
+      "@lib/db/*": ["lib/src/db/*"],
 
-			"@lib/schema": [ 	"lib/src/schema" ],
-			"@lib/schema/*": [ 	"lib/src/schema/*" ],
+      "@lib/shared": ["lib/src/shared"],
+      "@lib/shared/*": ["lib/src/shared/*"],
 
-			"@lib/util": [ "lib/src/util" ],
-			"@lib/util/*": [ "lib/src/util/*" ]
-		}
-	},
-	"exclude": [
-		"node_modules/"
-	]
+      "@lib/type": ["lib/src/type"],
+      "@lib/type/*": ["lib/src/type/*"],
+
+      "@lib/schema": ["lib/src/schema"],
+      "@lib/schema/*": ["lib/src/schema/*"],
+
+      "@lib/util": ["lib/src/util"],
+      "@lib/util/*": ["lib/src/util/*"]
+    }
+  },
+  "exclude": ["node_modules/"]
 }
