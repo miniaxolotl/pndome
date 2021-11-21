@@ -1,7 +1,7 @@
-import { JWTGuard, SchemaGuard } from '@backend/middleware';
+import { HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
 import { RoleGuard } from '@backend/middleware/role.guard';
-import { FileUploadSchema } from '@lib/schema';
-import { SERVER_ERROR, StatusCodes, SUCCESS, UserRoleType } from '@lib/shared';
+import { FileDownloadSchema, FileUploadSchema, IdSchema } from '@lib/schema';
+import { CLIENT_ERROR, SERVER_ERROR, StatusCodes, SUCCESS, UserRoleType } from '@lib/shared';
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
 import FileType from 'file-type';
@@ -10,10 +10,11 @@ import path from 'path';
 import crypto from 'crypto';
 import config from '../../../../../../server.config';
 import { Folder } from '.prisma/client';
-import { genHash } from '@lib/util';
 import { db } from '@lib/db';
 import { FolderHelper } from '../folder';
 import { FileHelper } from './file.helper';
+import { omit } from 'lodash';
+import { FolderGuard } from '@backend/middleware/folder.guard';
 
 const router: Router = new Router();
 
@@ -21,7 +22,7 @@ const router: Router = new Router();
  * routes
  ************************************************/
 
-router.all(
+router.post(
   '/',
   JWTGuard({ passthrough: true }),
   RoleGuard([UserRoleType.USER], { passthrough: true }),
@@ -39,11 +40,14 @@ router.all(
       if (data.folderId) {
         folder = await db.folder.findUnique({ where: { folderId: data.folderId } });
       } else {
-        folder = await FolderHelper.createFolder({
-          userId: ctx.state.userId,
-          password: data.password ? await genHash(data.password) : null,
-          isProtected: data.protected && ctx.state.userId ? true : false,
-        });
+        folder = {
+          ...(await FolderHelper.createFolder({
+            userId: ctx.state.userId,
+            password: data.password,
+            isProtected: data.protected && ctx.state.userId ? true : false,
+          })),
+          password: (data.password ? true : false) as unknown as string,
+        };
       }
 
       if (folder) {
@@ -110,5 +114,23 @@ router.all(
     }
   },
 ); // {post} /file
+
+router.get(
+  '/:id',
+  JWTGuard({ passthrough: true }),
+  ParamGuard(IdSchema),
+  HeaderGuard(FileDownloadSchema),
+  RoleGuard([UserRoleType.USER], { passthrough: true }),
+  FolderGuard(),
+  async (ctx: ParameterizedContext) => {
+    const file = await db.file.findUnique({ where: { fileId: ctx.params.id } });
+
+    if (file) {
+      ctx.body = omit(file, ['password', 'deleted']);
+    } else {
+      ctx.throw(CLIENT_ERROR.NOT_FOUND.status, CLIENT_ERROR.NOT_FOUND.message);
+    }
+  },
+); // {get} /file/:id
 
 export { router as FileController };

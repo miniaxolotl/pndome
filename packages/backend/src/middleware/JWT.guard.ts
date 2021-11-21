@@ -13,7 +13,6 @@ interface JWTPayload {
 export const JWTGuard = (options?: { passthrough?: boolean }) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {
     const authorization = ctx.headers.authorization;
-
     if (authorization) {
       const authorization_key = authorization.split(' ')[1] ?? null;
       if (authorization_key) {

@@ -1,4 +1,4 @@
-import { JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
+import { FolderGuard, HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
 import { RoleGuard } from '@backend/middleware/role.guard';
 import { FileDownloadSchema, IdSchema } from '@lib/schema';
 import { SUCCESS, UserRoleType } from '@lib/shared';
@@ -8,7 +8,6 @@ import fetch from 'node-fetch';
 import path from 'path';
 import config from '../../../../../../server.config';
 import { db } from '@lib/db';
-import { FolderGuard } from '@backend/middleware/FolderGuard';
 
 const router: Router = new Router();
 
@@ -19,9 +18,9 @@ const router: Router = new Router();
 router.get(
   '/:id',
   JWTGuard({ passthrough: true }),
-  RoleGuard([UserRoleType.USER], { passthrough: true }),
   ParamGuard(IdSchema),
-  SchemaGuard(FileDownloadSchema),
+  HeaderGuard(FileDownloadSchema),
+  RoleGuard([UserRoleType.USER], { passthrough: true }),
   FolderGuard(),
   async (ctx: ParameterizedContext) => {
     const file = await db.file.findUnique({ where: { fileId: ctx.params.id } });
