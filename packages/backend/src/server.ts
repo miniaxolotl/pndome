@@ -1,6 +1,7 @@
 import Koa, { ParameterizedContext } from 'koa';
+import fs from 'fs';
 
-import BodyParser from 'koa-bodyparser';
+import Body from 'koa-body';
 import CORS from '@koa/cors';
 import KoaJSON from 'koa-json';
 import KoaSession from 'koa-session';
@@ -65,7 +66,17 @@ app.use(
 
 app.use(KoaJSON({ pretty: false, param: 'pretty' }));
 
-app.use(BodyParser());
+app.use(
+  Body({
+    formidable: {
+      maxFileSize: config.MAX_BYTES,
+      uploadDir: config.FILE_PATH,
+      multiples: true,
+    },
+    multipart: true,
+    urlencoded: true,
+  }),
+);
 
 if (config.DEVELOPMENT) {
   app.use(logger());
@@ -109,6 +120,10 @@ app.ws.use(socket_router.routes() as unknown as Koa.Middleware);
 /************************************************
  * start server
  ************************************************/
+
+if (!fs.existsSync(config.FILE_PATH)) {
+  fs.mkdirSync(config.FILE_PATH, { recursive: true });
+}
 
 app.listen(config.PORT, () => {
   // eslint-disable-next-line no-console
