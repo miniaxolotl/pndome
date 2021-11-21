@@ -12,7 +12,7 @@ export const FolderGuard = () => {
       if (folder) {
         if (folder.password && !jwt.verify(folder.password, config.JWT_SECRET))
           ctx.throw(CLIENT_ERROR.UNAUTHORIZED.status, CLIENT_ERROR.UNAUTHORIZED.message);
-        if (folder.protected) {
+        if (folder.protected && ctx.state.userId) {
           const userFolder = await db.userFolder.findUnique({
             where: {
               userId_folderId: {
@@ -22,6 +22,9 @@ export const FolderGuard = () => {
             },
           });
           if (!userFolder)
+            ctx.throw(CLIENT_ERROR.UNAUTHORIZED.status, CLIENT_ERROR.UNAUTHORIZED.message);
+        } else {
+          if (folder.protected)
             ctx.throw(CLIENT_ERROR.UNAUTHORIZED.status, CLIENT_ERROR.UNAUTHORIZED.message);
         }
         return await next();

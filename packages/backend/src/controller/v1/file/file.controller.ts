@@ -113,7 +113,6 @@ router.all(
               !(await FileHelper.uploadFile({
                 filePath: path.join(folderId, newFile.fileId),
                 CDNPath: path.join(folderId, `${newFile.fileId}.${newFile.ext}`),
-                contentType: newFile.type,
                 media: newFile.media,
               }))
             ) {
