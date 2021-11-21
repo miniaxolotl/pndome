@@ -15,14 +15,14 @@ import { Prisma } from '@prisma/client';
 
   const seed_password = await genHash(config.ADMIN_PASS);
 
+  const admin: Prisma.UserCreateInput = {
+    userId: uid(16),
+    email: config.ADMIN_EMAIL,
+    username: config.ADMIN_USER,
+    password: await genHash(config.ADMIN_PASS),
+  };
+
   const userData: Prisma.UserCreateInput[] = [
-    {
-      userId: uid(16),
-      email: config.ADMIN_EMAIL,
-      username: config.ADMIN_USER,
-      password: await genHash(config.ADMIN_PASS),
-    },
-    // NOTE: genereate random users
     ..._.times(10, () => ({
       userId: uid(16),
       email: `${uid(6)}@emawa.io`,
@@ -44,16 +44,26 @@ import { Prisma } from '@prisma/client';
 
   console.log('\n---- user ----');
   /************* USER *************/
+  const user = await db.user.create({
+    data: {
+      ...admin,
+      roles: {
+        create: [
+          { roleId: UserRoleType.DEVELOPER.roleId },
+          { roleId: UserRoleType.ADMIN.roleId },
+          { roleId: UserRoleType.USER.roleId },
+        ],
+      },
+    },
+  });
+  console.log(`created user:#${user.userId}\n${user.email}\n${user.password}\n`);
+
   for (const u of userData) {
     const user = await db.user.create({
       data: {
         ...u,
         roles: {
-          create: [
-            { roleId: UserRoleType.DEVELOPER.roleId },
-            { roleId: UserRoleType.ADMIN.roleId },
-            { roleId: UserRoleType.USER.roleId },
-          ],
+          create: [{ roleId: UserRoleType.USER.roleId }],
         },
       },
     });

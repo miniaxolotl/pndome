@@ -22,7 +22,7 @@ router.get(
   RoleGuard([UserRoleType.ADMIN]),
   ParamGuard(SearchSchema),
   async (ctx: ParameterizedContext) => {
-    const roles = await RoleHelper.findAll(ctx.param);
+    const roles = await RoleHelper.findAll(ctx.params);
     ctx.body = roles;
   },
 ); // {get} /role/

@@ -40,19 +40,13 @@ router.post('/', SchemaGuard(CreateUserSchema), async (ctx: ParameterizedContext
 /**
  * get user account
  */
-router.get(
-  '/me',
-  JWTGuard(),
-  RoleGuard([UserRoleType.USER]),
-  ParamGuard(SearchSchema),
-  async (ctx: ParameterizedContext) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const user = await UserHelper.findById((ctx.session as any).user.userId);
-    if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
+router.get('/me', JWTGuard(), RoleGuard([UserRoleType.USER]), async (ctx: ParameterizedContext) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const user = await UserHelper.findById((ctx.session as any).user.userId);
+  if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
 
-    ctx.body = user;
-  },
-); // {get} /user/me
+  ctx.body = user;
+}); // {get} /user/me
 
 /**
  * get all users
@@ -63,7 +57,7 @@ router.get(
   RoleGuard([UserRoleType.ADMIN]),
   ParamGuard(SearchSchema),
   async (ctx: ParameterizedContext) => {
-    const users = await UserHelper.findAll(ctx.param);
+    const users = await UserHelper.findAll(ctx.params);
     ctx.body = users;
   },
 ); // {get} /user/
@@ -77,9 +71,9 @@ router.get(
   RoleGuard([UserRoleType.ADMIN]),
   ParamGuard(IdSchema),
   async (ctx: ParameterizedContext) => {
-    const param: { id: string } = ctx.param;
+    const { id } = ctx.params;
 
-    const user = await UserHelper.findById(param.id);
+    const user = await UserHelper.findById(id);
     if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
 
     ctx.body = user;
@@ -95,13 +89,13 @@ router.post(
   RoleGuard([UserRoleType.MODERATOR]),
   ParamGuard(IdSchema),
   async (ctx: ParameterizedContext) => {
-    const param: { id: string } = ctx.param;
+    const { id } = ctx.params;
 
-    const user = await UserHelper.findById(param.id);
+    const user = await UserHelper.findById(id);
 
     if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
 
-    ctx.body = await UserHelper.activate(param.id);
+    ctx.body = await UserHelper.activate(id);
   },
 ); // {post} /user/:id
 
@@ -114,13 +108,13 @@ router.delete(
   RoleGuard([UserRoleType.MODERATOR]),
   ParamGuard(IdSchema),
   async (ctx: ParameterizedContext) => {
-    const param: { id: string } = ctx.param;
+    const { id } = ctx.params;
 
-    const user = await UserHelper.findById(param.id);
+    const user = await UserHelper.findById(id);
 
     if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
 
-    ctx.body = await UserHelper.deactivate(param.id);
+    ctx.body = await UserHelper.deactivate(id);
   },
 ); // {delete} /user/:id
 
@@ -128,20 +122,20 @@ router.delete(
  * add a role to a user
  */
 router.post(
-  '/:id/:role',
+  '/:id/:roleId',
   JWTGuard(),
   RoleGuard([UserRoleType.ADMIN]),
   ParamGuard(RoleSchema),
   async (ctx: ParameterizedContext) => {
-    const param: RoleValues = ctx.param;
+    const role: RoleValues = ctx.param;
 
-    const user = await UserHelper.findById(param.id);
+    const user = await UserHelper.findById(role.id);
 
     if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
-    if (await UserHelper.hasRole(param.id, param.role))
-      ctx.throw(CLIENT_ERROR.CONFILCT.status, `user already has role ${param.role}`);
+    if (await UserHelper.hasRole(role.id, role.roleId))
+      ctx.throw(CLIENT_ERROR.CONFILCT.status, `user already has role ${role.roleId}`);
 
-    if (await UserHelper.addRole(param.id, param.role)) {
+    if (await UserHelper.addRole(role.id, role.roleId)) {
       ctx.status = SUCCESS.OK.status;
       ctx.body = SUCCESS.OK.message;
     } else {
@@ -160,15 +154,15 @@ router.delete(
   RoleGuard([UserRoleType.ADMIN]),
   ParamGuard(RoleSchema),
   async (ctx: ParameterizedContext) => {
-    const param: RoleValues = ctx.param;
+    const role: RoleValues = ctx.param;
 
-    const user = await UserHelper.findById(param.id);
+    const user = await UserHelper.findById(role.id);
 
     if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
-    if (!(await UserHelper.hasRole(param.id, param.role)))
-      ctx.throw(CLIENT_ERROR.NOT_FOUND.status, `user does not have role ${param.role}`);
+    if (!(await UserHelper.hasRole(role.id, role.roleId)))
+      ctx.throw(CLIENT_ERROR.NOT_FOUND.status, `user does not have role ${role.roleId}`);
 
-    if (await UserHelper.deleteRole(param.id, param.role)) {
+    if (await UserHelper.deleteRole(role.id, role.roleId)) {
       ctx.status = SUCCESS.OK.status;
       ctx.body = SUCCESS.OK.message;
     } else {

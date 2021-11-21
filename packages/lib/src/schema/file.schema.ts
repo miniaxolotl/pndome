@@ -7,3 +7,7 @@ export const FileUploadSchema = Joi.object({
 
   protected: Joi.boolean().default(true).required(),
 });
+
+export const FileDownloadSchema = Joi.object({
+  password: Joi.string().min(8).max(256).trim(),
+});

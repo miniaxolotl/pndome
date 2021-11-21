@@ -1,10 +1,11 @@
-import { JWTGuard, SchemaGuard } from '@backend/middleware';
+import { JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
 import { RoleGuard } from '@backend/middleware/role.guard';
-import { FileUploadSchema } from '@lib/schema';
+import { FileDownloadSchema, FileUploadSchema, IdSchema } from '@lib/schema';
 import { SERVER_ERROR, StatusCodes, SUCCESS, UserRoleType } from '@lib/shared';
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
 import FileType from 'file-type';
+import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
@@ -14,6 +15,7 @@ import { genHash } from '@lib/util';
 import { db } from '@lib/db';
 import { FolderHelper } from '../folder';
 import { FileHelper } from './file.helper';
+import { FolderGuard } from '@backend/middleware/FolderGuard';
 
 const router: Router = new Router();
 
@@ -65,6 +67,7 @@ router.all(
         folder = await db.folder.findUnique({ where: { folderId: data.folderId } });
       } else {
         folder = await FolderHelper.createFolder({
+          userId: ctx.state.userId,
           password: data.password ? await genHash(data.password) : null,
           isProtected: data.protected && ctx.state.userId ? true : false,
         });
@@ -139,5 +142,39 @@ router.all(
     }
   },
 ); // {post} /file
+
+router.get(
+  '/:id',
+  JWTGuard({ passthrough: true }),
+  RoleGuard([UserRoleType.USER], { passthrough: true }),
+  ParamGuard(IdSchema),
+  SchemaGuard(FileDownloadSchema),
+  FolderGuard(),
+  async (ctx: ParameterizedContext) => {
+    const file = await db.file.findUnique({ where: { fileId: ctx.params.id } });
+
+    if (file) {
+      const filePath = path.join(file.folderId, path.join(`${file.fileId}.${file.ext}`));
+      const response = await fetch(
+        `https://${
+          file.media ? config.BUNNYCDN_API_MEDIA : config.BUNNYCDN_API
+        }/uploads/${filePath}`,
+        {
+          method: 'GET',
+          headers: {
+            AccessKey: file.media ? config.BUNNYCDN_API_MEDIA_KEY : config.BUNNYCDN_API_KEY,
+          },
+        },
+      );
+      ctx.response.set('content-type', file.type);
+      ctx.response.set('content-length', `${file.bytes}`);
+      ctx.response.set('accept-ranges', 'bytes');
+      ctx.response.set('connection', 'keep-alive');
+      ctx.response.set('content-disposition', `inline; filename="${file.name}"`);
+
+      ctx.body = response.body;
+    }
+  },
+); // {get} /file/:id
 
 export { router as FileController };

@@ -18,7 +18,7 @@ export const ParamGuard = (Schema: Joi.ObjectSchema) => {
       });
       return;
     } else {
-      ctx.param = value;
+      ctx.params = value;
       await next();
     }
   };

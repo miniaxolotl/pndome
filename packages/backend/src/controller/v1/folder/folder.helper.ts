@@ -10,7 +10,7 @@ import { db, generateFantasyName } from 'lib/src';
  * @param data folder data to create
  * @returns database result
  */
-const createFolder = async ({ name, password, isProtected }: FolderValues) => {
+const createFolder = async ({ userId, name, password, isProtected }: FolderValues) => {
   const folderId: string = uid(16);
   const result = await db.folder.create({
     data: {
@@ -18,6 +18,9 @@ const createFolder = async ({ name, password, isProtected }: FolderValues) => {
       name: name ?? generateFantasyName(),
       password: password ? await genHash(password) : null,
       protected: isProtected,
+      users: {
+        create: userId ? { userId: userId, owner: true } : undefined,
+      },
     },
   });
   return result;
