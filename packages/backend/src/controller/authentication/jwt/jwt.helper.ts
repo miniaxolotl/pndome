@@ -22,7 +22,7 @@ const login = async ({ username, password }: LoginValues) => {
     // (user.roles as unknown as string[]) = user.roles.map((role) => role.roleId);
     const roles = user.roles.map(({ role }) => role.roleId);
     const created = new Date().getTime();
-    const expires = new Date(new Date().getTime() + 1000 * 60 * 15).getTime();
+    const expires = new Date(new Date().getTime() + 1000 * 60 * 5).getTime();
     const authorization = {
       userId: user.userId,
       iat: created,
