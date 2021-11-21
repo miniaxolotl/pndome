@@ -20,6 +20,6 @@ const downloadFile = async ({ CDNPath, media }) => {
   return response.body;
 };
 
-export const FileHelper = {
+export const DownloadHelper = {
   downloadFile,
 };

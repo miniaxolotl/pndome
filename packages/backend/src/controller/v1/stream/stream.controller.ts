@@ -82,6 +82,6 @@ router.get(
       }
     }
   },
-); // {get} /file/:id
+); // {get} /stream/:id
 
 export { router as StreamController };

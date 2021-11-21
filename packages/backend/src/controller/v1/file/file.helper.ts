@@ -13,6 +13,35 @@ import { createReadStream } from 'fs';
  * @param data file data to create
  * @returns database result
  */
+const createFileList = (files: File | File[]) => {
+  const fileList: File[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  for (const group of Object.keys(files)) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (files[group].length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      for (const fGroup of files[group]) {
+        if (fGroup.length > 0) {
+          fGroup.forEach((file: File) => {
+            fileList.push(file);
+          });
+        } else {
+          fileList.push(fGroup);
+        }
+      }
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      fileList.push(files[group]);
+    }
+  }
+  return fileList.length > 0 ? fileList : null;
+};
+
+/**
+ * create a new file
+ * @param data file data to create
+ * @returns database result
+ */
 const createFile = async (data: FileValues, folderId: string) => {
   const fileId: string = uid(16);
   const result = await db.file.create({
@@ -52,26 +81,8 @@ const uploadFile = async ({ filePath, CDNPath, media }) => {
   return response.status === 201;
 };
 
-/**
- * download file from cdn
- * @param data file data to create
- * @returns cdn response
- */
-const downloadFile = async ({ CDNPath, media }) => {
-  const response = await fetch(
-    `https://${media ? config.BUNNYCDN_API_MEDIA : config.BUNNYCDN_API}/uploads/${CDNPath}`,
-    {
-      method: 'GET',
-      headers: {
-        AccessKey: media ? config.BUNNYCDN_API_MEDIA_KEY : config.BUNNYCDN_API_KEY,
-      },
-    },
-  );
-  return response.body;
-};
-
 export const FileHelper = {
+  createFileList,
   createFile,
   uploadFile,
-  downloadFile,
 };
