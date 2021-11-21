@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 const NO_AUTHORITY = 1000;
 
-export const RoleGuard = (roles: RoleType[]) => {
+export const RoleGuard = (roles: RoleType[], options?: { passthrough: boolean }) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {
     // const userRoles = await db.userRole.findMany({
     //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,20 +17,25 @@ export const RoleGuard = (roles: RoleType[]) => {
 
     // FIXME: overengineered lol, but it works
     // NOTE: Reduce to highest authority (lowest number)
-    const authority = userRoles.reduce((acc, userRole) => {
-      return roles.reduce((acc, role) => {
-        return UserRoleType[_.upperCase(userRole)].authority <= role.authority
-          ? UserRoleType[_.upperCase(userRole)].authority
-          : acc;
-      }, 1000) <= acc
-        ? UserRoleType[_.upperCase(userRole)].authority
-        : acc;
-    }, 1000);
+    const authority = userRoles
+      ? userRoles.reduce((acc, userRole) => {
+          if (userRole === UserRoleType.DISABLED.roleId)
+            return ctx.throw(CLIENT_ERROR.UNAUTHORIZED.status, CLIENT_ERROR.UNAUTHORIZED.message);
+          return roles.reduce((acc, role) => {
+            return UserRoleType[_.upperCase(userRole)].authority <= role.authority
+              ? UserRoleType[_.upperCase(userRole)].authority
+              : acc;
+          }, 1000) <= acc
+            ? UserRoleType[_.upperCase(userRole)].authority
+            : acc;
+        }, 1000)
+      : NO_AUTHORITY;
 
-    if (authority < NO_AUTHORITY) await next();
-    else {
-      ctx.status = CLIENT_ERROR.UNAUTHORIZED.status;
-      ctx.body = CLIENT_ERROR.UNAUTHORIZED.message;
+    if (options?.passthrough) {
+      return await next();
+    } else {
+      if (authority < NO_AUTHORITY) return await next();
+      else return ctx.throw(CLIENT_ERROR.UNAUTHORIZED.status, CLIENT_ERROR.UNAUTHORIZED.message);
     }
   };
 };
