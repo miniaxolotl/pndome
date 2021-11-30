@@ -42,7 +42,7 @@ router.post('/', SchemaGuard(CreateUserSchema), async (ctx: ParameterizedContext
  */
 router.get('/me', JWTGuard(), RoleGuard([UserRoleType.USER]), async (ctx: ParameterizedContext) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const user = await UserHelper.findById((ctx.session as any).user.userId);
+  const user = await UserHelper.findById((ctx.state as any).userId);
   if (_.isEmpty(user)) ctx.throw(CLIENT_ERROR.NOT_FOUND.status, 'user does not exist');
 
   ctx.body = user;
