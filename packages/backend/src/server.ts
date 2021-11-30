@@ -18,6 +18,7 @@ import {
   JWTController,
   RoleController,
   StreamController,
+  FolderController,
 } from '.';
 import { connectDB } from 'lib/src';
 import { DownloadController } from './controller/v1/download';
@@ -97,6 +98,7 @@ if (config.DEVELOPMENT) {
   const API: Router = new Router();
 
   API.use(['/f', '/file'], FileController.routes());
+  API.use(['/fo', '/folder'], FolderController.routes());
   API.use(['/d', '/download'], DownloadController.routes());
   API.use(['/s', '/stream'], StreamController.routes());
   API.use(['/r', '/role'], RoleController.routes());

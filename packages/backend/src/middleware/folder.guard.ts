@@ -4,9 +4,11 @@ import { ParameterizedContext } from 'koa';
 
 export const FolderGuard = () => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {
-    const file = await db.file.findUnique({ where: { fileId: ctx.params.id } });
-    if (file) {
-      const folder = await db.folder.findUnique({ where: { folderId: file.folderId } });
+    if (ctx.params.id) {
+      const file = await db.file.findUnique({ where: { fileId: ctx.params.id } });
+      const folder = await db.folder.findUnique({
+        where: { folderId: file?.folderId ?? ctx.params.id },
+      });
       if (folder) {
         // NOTEe: folder has password
         if (folder.password) {
