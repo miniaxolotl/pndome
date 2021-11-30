@@ -81,8 +81,34 @@ const uploadFile = async ({ filePath, CDNPath, media }) => {
   return response.status === 201;
 };
 
+/**
+ * incement the view count of a file
+ * @param fileId file data to create
+ * @returns cdn responce
+ */
+const incrementViewCount = async (fileId) => {
+  await db.file.update({
+    where: { fileId },
+    data: { vCount: { increment: 1 } },
+  });
+};
+
+/**
+ * incement the download count of a file
+ * @param fileId file data to create
+ * @returns cdn responce
+ */
+const incrementDownloadCount = async (fileId) => {
+  await db.file.update({
+    where: { fileId },
+    data: { dCount: { increment: 1 } },
+  });
+};
+
 export const FileHelper = {
   createFileList,
   createFile,
   uploadFile,
+  incrementViewCount,
+  incrementDownloadCount,
 };

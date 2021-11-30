@@ -1,4 +1,4 @@
-import { FolderGuard, HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
+import { FolderGuard, HeaderGuard, JWTGuard, ParamGuard } from '@backend/middleware';
 import { RoleGuard } from '@backend/middleware/role.guard';
 import { FileDownloadSchema, IdSchema } from '@lib/schema';
 import { UserRoleType } from '@lib/shared';
@@ -8,6 +8,7 @@ import fetch from 'node-fetch';
 import path from 'path';
 import config from '../../../../../../server.config';
 import { db } from '@lib/db';
+import { FileHelper } from '../file';
 
 const router: Router = new Router();
 
@@ -24,6 +25,7 @@ router.get(
   FolderGuard(),
   async (ctx: ParameterizedContext) => {
     const file = await db.file.findUnique({ where: { fileId: ctx.params.id } });
+    FileHelper.incrementDownloadCount(ctx.params.id);
 
     if (file) {
       const filePath = path.join(file.folderId, path.join(`${file.fileId}.${file.ext}`));

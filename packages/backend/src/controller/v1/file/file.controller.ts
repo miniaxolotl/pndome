@@ -1,7 +1,7 @@
 import { HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
 import { RoleGuard } from '@backend/middleware/role.guard';
 import { FileDownloadSchema, FileUploadSchema, IdSchema } from '@lib/schema';
-import { CLIENT_ERROR, SERVER_ERROR, StatusCodes, SUCCESS, UserRoleType } from '@lib/shared';
+import { SERVER_ERROR, StatusCodes, SUCCESS, UserRoleType } from '@lib/shared';
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
 import FileType from 'file-type';
@@ -124,12 +124,8 @@ router.get(
   FolderGuard(),
   async (ctx: ParameterizedContext) => {
     const file = await db.file.findUnique({ where: { fileId: ctx.params.id } });
-
-    if (file) {
-      ctx.body = omit(file, ['password', 'deleted']);
-    } else {
-      ctx.throw(CLIENT_ERROR.NOT_FOUND.status, CLIENT_ERROR.NOT_FOUND.message);
-    }
+    FileHelper.incrementViewCount(ctx.params.id);
+    ctx.body = omit(file, ['password', 'deleted']);
   },
 ); // {get} /file/:id
 

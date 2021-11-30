@@ -46,7 +46,7 @@ router.get(
   FolderGuard(),
   async (ctx: ParameterizedContext) => {
     const folder = await db.folder.findUnique({ where: { folderId: ctx.params.id } });
-
+    FolderHelper.incrementDownloadCount(ctx.params.id);
     if (folder) {
       ctx.body = {
         ...folder,

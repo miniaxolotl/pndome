@@ -1,4 +1,4 @@
-import { FolderGuard, HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
+import { FolderGuard, HeaderGuard, JWTGuard, ParamGuard } from '@backend/middleware';
 import { RoleGuard } from '@backend/middleware/role.guard';
 import { FileDownloadSchema, IdSchema } from '@lib/schema';
 import { SUCCESS, UserRoleType } from '@lib/shared';
@@ -8,6 +8,7 @@ import fetch from 'node-fetch';
 import path from 'path';
 import config from '../../../../../../server.config';
 import { db } from '@lib/db';
+import { FileHelper } from '../file';
 
 const router: Router = new Router();
 
@@ -58,6 +59,7 @@ router.get(
         ctx.body = response.body;
         return;
       } else {
+        FileHelper.incrementDownloadCount(ctx.params.id);
         ctx.response.set('content-type', file.type);
         ctx.response.set('content-length', `${file.bytes}`);
         ctx.response.set('accept-ranges', 'bytes');
