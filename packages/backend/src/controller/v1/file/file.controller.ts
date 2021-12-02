@@ -123,9 +123,24 @@ router.get(
   RoleGuard([UserRoleType.USER], { passthrough: true }),
   FolderGuard(),
   async (ctx: ParameterizedContext) => {
-    const file = await db.file.findUnique({ where: { fileId: ctx.params.id } });
+    const file = await db.file.findUnique({
+      where: { fileId: ctx.params.id },
+    });
     FileHelper.incrementViewCount(ctx.params.id);
-    ctx.body = omit(file, ['password', 'deleted']);
+
+    if (file) {
+      const filePath = `/uploads/${path.join(`${file.folderId}`, `${ctx.params.id}.${file.ext}`)}`;
+      const { token, expires } = await FileHelper.createToken({ filePath: filePath });
+      ctx.body = {
+        ...omit(file, ['password', 'deleted']),
+        direct: { path: filePath, token, expires },
+      };
+    } else {
+      ctx.throw(
+        StatusCodes.CLIENT_ERROR.NOT_FOUND.status,
+        StatusCodes.CLIENT_ERROR.NOT_FOUND.message,
+      );
+    }
   },
 ); // {get} /file/:id
 

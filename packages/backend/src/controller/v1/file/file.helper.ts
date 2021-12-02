@@ -1,6 +1,7 @@
 import { uid } from 'uid/secure';
 import fetch from 'node-fetch';
 import path from 'path';
+import crypto from 'crypto';
 
 import { FileValues } from '@lib/type';
 
@@ -82,6 +83,24 @@ const uploadFile = async ({ filePath, CDNPath, media }) => {
 };
 
 /**
+ * incement the download count of a file
+ * @param fileId file data to create
+ * @returns cdn responce
+ */
+const createToken = async ({ filePath }) => {
+  const EXPIRE_DELTA = 1000 * 60 * 60; // 1 hour
+  const tokenExpire = new Date().getTime() + EXPIRE_DELTA;
+  const tokenBase = `${config.BUNNYCDN_TOKEN}${filePath}${tokenExpire}`;
+  const tokenSHA256 = crypto.createHash('sha256').update(tokenBase).digest('hex');
+  const tokenBase64 = Buffer.from(tokenSHA256, 'hex').toString('base64');
+  const tokenSafe = tokenBase64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+/, '');
+  return {
+    token: tokenSafe,
+    expires: tokenExpire,
+  };
+};
+
+/**
  * incement the view count of a file
  * @param fileId file data to create
  * @returns cdn responce
@@ -109,6 +128,7 @@ export const FileHelper = {
   createFileList,
   createFile,
   uploadFile,
+  createToken,
   incrementViewCount,
   incrementDownloadCount,
 };

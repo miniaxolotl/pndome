@@ -7,6 +7,7 @@ export const config: {
   BUNNYCDN_API_KEY: string;
   BUNNYCDN_API_MEDIA: string;
   BUNNYCDN_API_MEDIA_KEY: string;
+  BUNNYCDN_TOKEN: string;
   SESSION_KEYS: string[];
   ENCRYPTION_KEY: string;
   JWT_SECRET: string;
@@ -25,6 +26,7 @@ export const config: {
   BUNNYCDN_API_KEY: process.env.BUNNYCDN_API_KEY ?? 'super-duper-secret',
   BUNNYCDN_API_MEDIA: process.env.BUNNYCDN_API_MEDIA ?? 'la.storage.bunnycdn.com',
   BUNNYCDN_API_MEDIA_KEY: process.env.BUNNYCDN_API_MEDIA_KEY ?? 'super-duper-secret',
+  BUNNYCDN_TOKEN: process.env.BUNNYCDN_TOKEN ?? 'super-duper-secret',
   SESSION_KEYS: process.env.SESSION_KEYS
     ? JSON.parse(process.env.SESSION_KEYS)
     : ['super-duper-secret', 'even-more-secret'],
