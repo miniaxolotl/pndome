@@ -122,7 +122,7 @@ const findByUserId = async (userId, { page, take }, deleted = false) => {
     take: take,
     where: {
       folder: { users: { every: { userId } } },
-      deleted: deleted ? { equals: null } : { not: null },
+      deleted: !deleted ? { equals: null } : { not: null },
     },
   });
   return result.map((file) => omit(file, ['folder']));

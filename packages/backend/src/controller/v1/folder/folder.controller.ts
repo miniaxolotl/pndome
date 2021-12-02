@@ -7,6 +7,7 @@ import {
   FolderKeySchema,
   FolderPatchSchema,
   IdSchema,
+  SearchSchema,
 } from '@lib/schema';
 import { CLIENT_ERROR, UserRoleType } from '@lib/shared';
 import { ParameterizedContext } from 'koa';
@@ -44,6 +45,18 @@ router.post(
     }
   },
 ); // {post} /folder
+
+router.get(
+  '/me',
+  JWTGuard(),
+  RoleGuard([UserRoleType.USER]),
+  HeaderGuard(FileDownloadSchema),
+  ParamGuard(SearchSchema),
+  async (ctx: ParameterizedContext) => {
+    const files = await FolderHelper.findByUserId(ctx.state.userId, ctx.params);
+    ctx.body = files;
+  },
+); // {get} /folder/:id
 
 router.get(
   '/:id',

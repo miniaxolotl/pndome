@@ -27,6 +27,23 @@ const createFolder = async ({ userId, name, password, isProtected }: FolderValue
 };
 
 /**
+ * find a user by id
+ * @param userId id of user to find
+ * @returns database result
+ */
+const findByUserId = async (userId, { page, take }, deleted = false) => {
+  const result = await db.folder.findMany({
+    skip: take * (page ?? 0),
+    take: take,
+    where: {
+      users: { every: { userId } },
+      deleted: !deleted ? { equals: null } : { not: null },
+    },
+  });
+  return result.map((folder) => ({ ...folder, password: !!folder.password }));
+};
+
+/**
  * deactivate a user
  * @param userId id of user to deactivate
  * @returns database result
@@ -101,6 +118,7 @@ const incrementDownloadCount = async (folderId) => {
 
 export const FolderHelper = {
   createFolder,
+  findByUserId,
   patchFolder,
   deleteFolder,
   addUserAccess,
