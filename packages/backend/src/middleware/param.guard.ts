@@ -2,12 +2,16 @@ import Joi from 'joi';
 import { ParameterizedContext } from 'koa';
 import { StatusCodes } from 'lib/src';
 
-export const ParamGuard = (Schema: Joi.ObjectSchema) => {
+export const ParamGuard = (
+  Schema: Joi.ObjectSchema,
+  options: { unknown: boolean } = { unknown: false },
+) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {
     const params = ctx.params;
     const { value, error } = Schema.validate(params, {
       abortEarly: false,
       errors: { escapeHtml: true },
+      allowUnknown: options.unknown,
     });
     if (error) {
       ctx.status = StatusCodes.CLIENT_ERROR.BAD_REQUEST.status;

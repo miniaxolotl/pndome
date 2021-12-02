@@ -47,7 +47,7 @@ const patch = async (userId: string, payload: Omit<Partial<UserValues>, 'email'>
  */
 export const activate = async (userId: string) => {
   const result = await db.user.update({ where: { userId }, data: { deleted: null } });
-  return omit(result, ['password', 'deleted']);
+  return omit(result, ['password']);
 };
 
 /**
@@ -57,7 +57,7 @@ export const activate = async (userId: string) => {
  */
 export const deactivate = async (userId: string) => {
   const result = await db.user.update({ where: { userId }, data: { deleted: new Date() } });
-  return omit(result, ['password', 'deleted']);
+  return omit(result, ['password']);
 };
 
 /**

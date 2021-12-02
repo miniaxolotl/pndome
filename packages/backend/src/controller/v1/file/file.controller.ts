@@ -1,6 +1,12 @@
 import { HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
 import { RoleGuard } from '@backend/middleware/role.guard';
-import { FileDownloadSchema, FileUploadSchema, IdSchema } from '@lib/schema';
+import {
+  FileDownloadSchema,
+  FileUploadSchema,
+  FolderKeySchema,
+  IdSchema,
+  SearchSchema,
+} from '@lib/schema';
 import { SERVER_ERROR, StatusCodes, SUCCESS, UserRoleType } from '@lib/shared';
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
@@ -116,16 +122,49 @@ router.post(
 ); // {post} /file
 
 router.get(
+  '/',
+  JWTGuard(),
+  RoleGuard([UserRoleType.ADMIN]),
+  ParamGuard(SearchSchema),
+  async (ctx: ParameterizedContext) => {
+    const files = await FileHelper.findAll(ctx.params);
+    ctx.body = files;
+  },
+); // {get} /file/:id
+
+router.get(
+  '/me',
+  JWTGuard(),
+  RoleGuard([UserRoleType.USER]),
+  HeaderGuard(FileDownloadSchema),
+  ParamGuard(SearchSchema),
+  async (ctx: ParameterizedContext) => {
+    const files = await FileHelper.findByUserId(ctx.state.userId, ctx.params);
+    ctx.body = files;
+  },
+); // {get} /file/:id
+
+router.get(
+  '/user/:id',
+  JWTGuard(),
+  RoleGuard([UserRoleType.ADMIN]),
+  ParamGuard(IdSchema, { unknown: true }),
+  ParamGuard(SearchSchema, { unknown: true }),
+  async (ctx: ParameterizedContext) => {
+    const files = await FileHelper.findByUserId(ctx.params.userId, ctx.params, true);
+    ctx.body = files;
+  },
+); // {get} /file/:id
+
+router.get(
   '/:id',
   JWTGuard({ passthrough: true }),
   ParamGuard(IdSchema),
   HeaderGuard(FileDownloadSchema),
-  RoleGuard([UserRoleType.USER], { passthrough: true }),
+  RoleGuard([UserRoleType.USER]),
   FolderGuard(),
   async (ctx: ParameterizedContext) => {
-    const file = await db.file.findUnique({
-      where: { fileId: ctx.params.id },
-    });
+    const file = await FileHelper.findById(ctx.params.id);
     FileHelper.incrementViewCount(ctx.params.id);
 
     if (file) {

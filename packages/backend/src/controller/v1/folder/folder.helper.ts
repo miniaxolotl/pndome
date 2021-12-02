@@ -27,6 +27,55 @@ const createFolder = async ({ userId, name, password, isProtected }: FolderValue
 };
 
 /**
+ * deactivate a user
+ * @param userId id of user to deactivate
+ * @returns database result
+ */
+export const patchFolder = async (folderId: string, data) => {
+  const result = await db.folder.update({
+    where: { folderId },
+    data: {
+      ...data,
+      password: data.password ? await genHash(data.password) : null,
+    },
+  });
+  return result;
+};
+
+/**
+ * deactivate a user
+ * @param userId id of user to deactivate
+ * @returns database result
+ */
+export const deleteFolder = async (folderId: string) => {
+  const result = await db.folder.update({ where: { folderId }, data: { deleted: new Date() } });
+  return result;
+};
+
+/**
+ * deactivate a user
+ * @param userId id of user to deactivate
+ * @returns database result
+ */
+export const addUserAccess = async (folderId: string, userId: string) => {
+  const result = await db.userFolder.create({ data: { folderId, userId } });
+  return result;
+};
+
+/**
+ * deactivate a user
+ * @param userId id of user to deactivate
+ * @returns database result
+ */
+export const revokeUserAccess = async (folderId: string, userId: string) => {
+  const result = await db.userFolder.update({
+    where: { userId_folderId: { folderId, userId } },
+    data: { access: false },
+  });
+  return result;
+};
+
+/**
  * incement the view count of a file
  * @param folderId file data to create
  * @returns cdn responce
@@ -52,6 +101,10 @@ const incrementDownloadCount = async (folderId) => {
 
 export const FolderHelper = {
   createFolder,
+  patchFolder,
+  deleteFolder,
+  addUserAccess,
+  revokeUserAccess,
   incrementViewCount,
   incrementDownloadCount,
 };

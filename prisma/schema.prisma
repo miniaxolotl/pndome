@@ -97,6 +97,7 @@ model File {
 model UserFolder {
   userId   String  @db.VarChar(16)
   folderId String  @db.VarChar(16)
+  access   Boolean @default(true)
   owner    Boolean @default(false)
 
   user User   @relation(fields: [userId], references: [userId])

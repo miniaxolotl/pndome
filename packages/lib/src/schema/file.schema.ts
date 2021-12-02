@@ -11,3 +11,7 @@ export const FileUploadSchema = Joi.object({
 export const FileDownloadSchema = Joi.object({
   'folder-key': Joi.string().min(4).max(256).trim(),
 });
+
+export const FilePatchSchema = Joi.object({
+  name: Joi.string().min(4).max(256).trim(),
+});

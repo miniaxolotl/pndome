@@ -25,12 +25,12 @@ export const RoleGuard = (roles: RoleType[], options?: { passthrough: boolean })
             return UserRoleType[_.upperCase(userRole)].authority <= role.authority
               ? UserRoleType[_.upperCase(userRole)].authority
               : acc;
-          }, 1000) <= acc
+          }, 1000) < acc
             ? UserRoleType[_.upperCase(userRole)].authority
             : acc;
         }, 1000)
       : NO_AUTHORITY;
-
+    ctx.state.authority = authority;
     if (options?.passthrough) {
       return await next();
     } else {

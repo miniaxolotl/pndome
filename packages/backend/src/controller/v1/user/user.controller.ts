@@ -68,7 +68,7 @@ router.get(
 router.get(
   '/:id',
   JWTGuard(),
-  RoleGuard([UserRoleType.ADMIN]),
+  RoleGuard([UserRoleType.USER]),
   ParamGuard(IdSchema),
   async (ctx: ParameterizedContext) => {
     const { id } = ctx.params;

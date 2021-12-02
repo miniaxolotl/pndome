@@ -8,6 +8,7 @@ import { FileValues } from '@lib/type';
 import { db } from 'lib/src';
 import config from '../../../../../../server.config';
 import { createReadStream } from 'fs';
+import { omit } from 'lodash';
 
 /**
  * create a new file
@@ -101,6 +102,45 @@ const createToken = async ({ filePath }) => {
 };
 
 /**
+ * find a user by id
+ * @param userId id of user to find
+ * @returns database result
+ */
+const findAll = async ({ page, take }) => {
+  const result = await db.file.findMany({ skip: take * (page ?? 0), take: take });
+  return result.map((file) => omit(file, ['folder']));
+};
+
+/**
+ * find a user by id
+ * @param userId id of user to find
+ * @returns database result
+ */
+const findByUserId = async (userId, { page, take }, deleted = false) => {
+  const result = await db.file.findMany({
+    skip: take * (page ?? 0),
+    take: take,
+    where: {
+      folder: { users: { every: { userId } } },
+      deleted: deleted ? { equals: null } : { not: null },
+    },
+  });
+  return result.map((file) => omit(file, ['folder']));
+};
+
+/**
+ * find a user by id
+ * @param userId id of user to find
+ * @returns database result
+ */
+const findById = async (fileId) => {
+  const result = await db.file.findUnique({
+    where: { fileId },
+  });
+  return result;
+};
+
+/**
  * incement the view count of a file
  * @param fileId file data to create
  * @returns cdn responce
@@ -129,6 +169,9 @@ export const FileHelper = {
   createFile,
   uploadFile,
   createToken,
+  findAll,
+  findById,
+  findByUserId,
   incrementViewCount,
   incrementDownloadCount,
 };

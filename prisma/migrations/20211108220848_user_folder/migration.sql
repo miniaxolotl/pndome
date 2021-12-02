@@ -2,6 +2,7 @@
 CREATE TABLE `UserFolder` (
     `userId` VARCHAR(16) NOT NULL,
     `folderId` VARCHAR(16) NOT NULL,
+    `access` BOOLEAN NOT NULL DEFAULT true,
     `owner` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`userId`, `folderId`)
