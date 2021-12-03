@@ -1,7 +1,8 @@
-import { Stack } from '@chakra-ui/react';
-import IconLink from '@components/misc/IconLink';
 import React from 'react';
+import { Stack } from '@chakra-ui/react';
 import { FiLogIn, FiUserPlus } from 'react-icons/fi';
+
+import IconLink from '@components/misc/IconLink';
 
 const UnauthenitcatedView = () => (
   <>
@@ -10,18 +11,14 @@ const UnauthenitcatedView = () => (
   </>
 );
 
-const AuthenticatedView = () => (
-  <>
-    <IconLink icon={FiLogIn}>Username</IconLink>
-  </>
-);
+const AuthenticatedView = () => <IconLink icon={FiLogIn}>Username</IconLink>;
 
-const UserMenuInfoBar = ({}) => {
+const UserMenuInfoBar = () => {
   const authenticated = false;
 
   return (
     <Stack
-      className="info-bar"
+      className="user-menu-info-bar"
       direction="row"
       spacing={4}
       paddingX={4}

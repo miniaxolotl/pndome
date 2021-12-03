@@ -1,28 +1,30 @@
+import { FiMenu } from 'react-icons/fi';
 import { IconButton } from '@chakra-ui/button';
-import { Stack, Link as ChakraLink } from '@chakra-ui/layout';
-import { Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/menu';
-import { FiLogIn, FiMenu, FiUser, FiUserPlus } from 'react-icons/fi';
-
 import React from 'react';
+import { Stack } from '@chakra-ui/layout';
+import { Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/menu';
+
 import UserMenuInfoBar from './UserMenuInfoBar';
+import { useMultiStyleConfig } from '@chakra-ui/react';
 
 interface UserMenuProps {
   showInfoBar?: boolean;
 }
 
 const UserMenu = ({ showInfoBar }: UserMenuProps) => {
+  const style = useMultiStyleConfig('UserMenuTheme', {});
   return (
-    <Stack direction="row" spacing={0} borderRadius="xl" shadow="lg">
+    <Stack sx={style} direction="row" spacing={0} borderRadius="xl" shadow="md">
       <Menu isLazy>
         <MenuButton
           as={IconButton}
           icon={<FiMenu />}
-          className="menu-icon"
-          colorScheme="brand"
+          className="user-menu-button"
           borderRightRadius={showInfoBar ? 0 : 'xl'}
+          fontSize="2xl"
           borderLeftRadius="xl"
         />
-        <MenuList borderRadius="xl">
+        <MenuList borderRadius="xl" className="user-menu-list" fontSize="lg">
           <MenuGroup title="Profile">
             <MenuItem>My Account</MenuItem>
             <MenuItem>Payments </MenuItem>

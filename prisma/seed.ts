@@ -1,13 +1,12 @@
-import { connectDB, db } from 'lib/src';
-
-import { UserRoleType } from '@lib/shared';
-import { genHash } from '@lib/util/bcrypt';
-
+import { Prisma } from '@prisma/client';
 import _ from 'lodash';
 import { uid } from 'uid/secure';
 
+import { UserRoleType } from '@lib/shared';
+import { genHash } from '@lib/util/bcrypt';
+import { connectDB, db } from '@lib/db';
+
 import config from '../server.config';
-import { Prisma } from '@prisma/client';
 
 (async () => {
   await connectDB();

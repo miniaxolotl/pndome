@@ -1,6 +1,6 @@
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import crypto from 'crypto';
 
 const adjective = fs.readFileSync(path.resolve(__dirname, 'fantasy-words/adjective.txt'), 'utf8');
 const adverb = fs.readFileSync(path.resolve(__dirname, 'fantasy-words/adverb.txt'), 'utf8');

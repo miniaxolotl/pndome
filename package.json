@@ -14,8 +14,8 @@
     "lint": "yarn eslint . --ext .js,.ts,.tsx",
     "test": "lerna run test",
     "serve": "lerna run serve --stream",
-    "start": "concurrently 'lerna run start' ",
-    "build": "concurrently 'lerna run build' ",
+    "start": "concurrently 'lerna run start'",
+    "build": "concurrently 'lerna run build'",
     "serve:api": "lerna run serve:api --stream",
     "serve:web": "lerna run serve:web --stream",
     "build:web": "concurrently 'lerna run build:web' ",
@@ -30,6 +30,7 @@
   "devDependencies": {
     "@koa/cors": "^3.1.0",
     "@types/jest": "^27.0.2",
+    "@types/node-fetch": "2",
     "@types/jsonwebtoken": "^8.5.6",
     "@types/koa": "^2.13.4",
     "@types/koa-bodyparser": "^4.3.3",
@@ -60,7 +61,6 @@
   },
   "dependencies": {
     "@prisma/client": "^3.4.1",
-    "@types/node-fetch": "2",
     "backend": "./packages/backend",
     "bcrypt": "^5.0.1",
     "file-type": "^16.5.3",

@@ -1,28 +1,27 @@
-import Koa, { ParameterizedContext } from 'koa';
-import fs from 'fs';
-
 import Body from 'koa-body';
+import fs from 'fs';
+import logger from 'koa-logger';
+import websockify from 'koa-websocket';
+import Koa, { ParameterizedContext } from 'koa';
+
 import CORS from '@koa/cors';
 import KoaJSON from 'koa-json';
-import KoaSession from 'koa-session';
 import Router from 'koa-router';
-import websockify from 'koa-websocket';
-import logger from 'koa-logger';
-
 import config from '../../../server.config';
+
+import { DownloadController } from './controller/v1/download';
+import KoaSession from 'koa-session';
+import { connectDB } from 'lib/src';
 
 import {
   FileController,
-  UserController,
-  SessionController,
+  FolderController,
   JWTController,
   RoleController,
+  SessionController,
   StreamController,
-  FolderController,
+  UserController,
 } from '.';
-import { connectDB } from 'lib/src';
-import { DownloadController } from './controller/v1/download';
-
 /************************************************
  * setup
  ************************************************/

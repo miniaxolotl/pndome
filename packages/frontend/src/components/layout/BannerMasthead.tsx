@@ -13,7 +13,7 @@ const BannerMasthead = (props: BannerMastheadProps) => {
           src="/banner.svg"
           height="160px"
           alt="Logo"
-          style={{ filter: 'drop-shadow(2px 2px 2px #000)' }}
+          style={{ filter: 'drop-shadow(2px 2px 4px #000)' }}
         />
       </Flex>
     </Box>

@@ -1,11 +1,11 @@
-import { Box, Stack } from '@chakra-ui/layout';
-import { Image } from '@chakra-ui/react';
 import React from 'react';
+import { Stack } from '@chakra-ui/layout';
+
 import LightModeMenu from './LightModeButton';
 import UserMenu from './UserMenu';
 
 interface DesktopNavigationProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const DesktopNavigation = ({ children }: DesktopNavigationProps) => {
@@ -17,6 +17,7 @@ const DesktopNavigation = ({ children }: DesktopNavigationProps) => {
       className="desktop-navigation"
     >
       <UserMenu />
+      {children}
       <LightModeMenu />
     </Stack>
   );

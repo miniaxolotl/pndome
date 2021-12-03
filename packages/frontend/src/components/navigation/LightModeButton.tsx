@@ -1,23 +1,20 @@
+import { FiMoon } from 'react-icons/fi';
 import { IconButton } from '@chakra-ui/button';
-import { Stack, Link as ChakraLink } from '@chakra-ui/layout';
-import { Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList } from '@chakra-ui/menu';
-import { FiMenu, FiMoon } from 'react-icons/fi';
+import { useColorMode, useMultiStyleConfig } from '@chakra-ui/react';
 
 import React from 'react';
-import { useTheme } from '@chakra-ui/system';
 
-interface LightModeButtonProps {}
-
-const LightModeButton = (props: LightModeButtonProps) => {
+const LightModeButton = () => {
+  const { toggleColorMode } = useColorMode();
+  const style = useMultiStyleConfig('LightModeButtonTheme', {});
   return (
     <IconButton
-      shadow="lg"
+      sx={style}
       icon={<FiMoon />}
-      colorScheme="brand2"
-      borderRadius="xl"
-      background="background.100"
-      className="light-mode-button"
+      onClick={toggleColorMode}
       aria-label="light-mode"
+      borderRadius="xl"
+      shadow="md"
     />
   );
 };

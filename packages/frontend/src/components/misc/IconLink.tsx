@@ -1,4 +1,4 @@
-import { Stack, Text, Link as ChakraLink } from '@chakra-ui/layout';
+import { Link as ChakraLink, Stack, Text } from '@chakra-ui/layout';
 import { Icon, useMultiStyleConfig } from '@chakra-ui/react';
 import React from 'react';
 
