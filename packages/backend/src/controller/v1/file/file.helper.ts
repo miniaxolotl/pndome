@@ -1,15 +1,14 @@
-import { uid } from 'uid/secure';
-import fetch from 'node-fetch';
-import path from 'path';
+import { createReadStream } from 'fs';
 import crypto from 'crypto';
+import fetch from 'node-fetch';
+import { omit } from 'lodash';
+import path from 'path';
+import { uid } from 'uid/secure';
 
 import { FileValues } from '@lib/type';
-
 import { db } from 'lib/src';
-import config from '../../../../../../server.config';
-import { createReadStream } from 'fs';
-import { omit } from 'lodash';
 
+import config from '../../../../../../server.config';
 /**
  * create a new file
  * @param data file data to create

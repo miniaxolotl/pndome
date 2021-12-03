@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { LoginValues } from '@lib/schema';
 import { compare } from '@lib/util';
 import { db } from 'lib/src';
+
 import config from '../../../../../../server.config';
 
 const login = async ({ username, password }: LoginValues) => {

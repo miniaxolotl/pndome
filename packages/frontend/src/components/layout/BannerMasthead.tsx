@@ -1,11 +1,7 @@
 import React from 'react';
 import { Box, Flex, Image } from '@chakra-ui/react';
 
-interface BannerMastheadProps {
-  children?: React.ReactNode;
-}
-
-const BannerMasthead = (props: BannerMastheadProps) => {
+const BannerMasthead = () => {
   return (
     <Box>
       <Flex justifyContent="center">

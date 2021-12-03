@@ -1,5 +1,12 @@
-import { HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
+import { ParameterizedContext } from 'koa';
+import Router from 'koa-router';
+import _ from 'lodash';
+
+import { FolderGuard } from '@backend/middleware/folder.guard';
+import { FolderHelper } from '.';
 import { RoleGuard } from '@backend/middleware/role.guard';
+import { db } from '@lib/db';
+import { CLIENT_ERROR, UserRoleType } from '@lib/shared';
 import {
   CreateFolderSchema,
   FileDownloadSchema,
@@ -9,13 +16,7 @@ import {
   IdSchema,
   SearchSchema,
 } from '@lib/schema';
-import { CLIENT_ERROR, UserRoleType } from '@lib/shared';
-import { ParameterizedContext } from 'koa';
-import Router from 'koa-router';
-import { db } from '@lib/db';
-import { FolderGuard } from '@backend/middleware/folder.guard';
-import { FolderHelper } from '.';
-import _ from 'lodash';
+import { HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
 
 const router: Router = new Router();
 

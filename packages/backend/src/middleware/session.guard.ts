@@ -1,6 +1,7 @@
-import { db } from 'lib/src';
-import { CLIENT_ERROR } from '@lib/shared';
 import { ParameterizedContext } from 'koa';
+
+import { CLIENT_ERROR } from '@lib/shared';
+import { db } from 'lib/src';
 
 export const SessionGuard = (options?: { passthrough?: boolean }) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {

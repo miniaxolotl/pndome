@@ -1,8 +1,8 @@
+import { omit } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
 import { LoginValues } from '@lib/schema';
 import { compare } from '@lib/util';
-import { omit } from 'lodash';
 import { db } from 'lib/src';
 
 const login = async ({ username, password }: LoginValues) => {

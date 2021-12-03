@@ -1,13 +1,13 @@
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
-
-import { JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
-import { UserValues } from '@lib/type';
-import { CreateUserSchema, IdSchema, RoleSchema, RoleValues, SearchSchema } from '@lib/schema';
-import { CLIENT_ERROR, SERVER_ERROR, SUCCESS, UserRoleType } from '@lib/shared';
-import { UserHelper } from '.';
 import _ from 'lodash';
+
 import { RoleGuard } from '@backend/middleware/role.guard';
+import { UserHelper } from '.';
+import { UserValues } from '@lib/type';
+import { CLIENT_ERROR, SERVER_ERROR, SUCCESS, UserRoleType } from '@lib/shared';
+import { CreateUserSchema, IdSchema, RoleSchema, RoleValues, SearchSchema } from '@lib/schema';
+import { JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
 
 const router: Router = new Router();
 

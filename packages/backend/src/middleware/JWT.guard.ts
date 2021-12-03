@@ -1,6 +1,7 @@
 import { CLIENT_ERROR } from '@lib/shared';
 import { ParameterizedContext } from 'koa';
 import jwt from 'jsonwebtoken';
+
 import { config } from '../../../../server.config';
 
 interface JWTPayload {

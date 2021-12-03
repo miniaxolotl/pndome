@@ -1,6 +1,7 @@
+import React from 'react';
+
 import { Link as ChakraLink, Stack, Text } from '@chakra-ui/layout';
 import { Icon, useMultiStyleConfig } from '@chakra-ui/react';
-import React from 'react';
 
 interface IconLinkProps {
   children: React.ReactNode;

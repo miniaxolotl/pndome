@@ -1,8 +1,8 @@
-import { CLIENT_ERROR, UserRoleType } from '@lib/shared';
-import { RoleType } from '@lib/type';
-
 import { ParameterizedContext } from 'koa';
 import _ from 'lodash';
+
+import { RoleType } from '@lib/type';
+import { CLIENT_ERROR, UserRoleType } from '@lib/shared';
 
 const NO_AUTHORITY = 1000;
 
