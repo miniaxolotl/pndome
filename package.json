@@ -15,7 +15,11 @@
     "test": "lerna run test",
     "serve": "lerna run serve --stream",
     "start": "concurrently 'lerna run start' ",
-    "build": "concurrently 'lerna run build' "
+    "build": "concurrently 'lerna run build' ",
+    "serve:api": "lerna run serve:api --stream",
+    "serve:web": "lerna run serve:web --stream",
+    "build:web": "concurrently 'lerna run build:web' ",
+    "start:web": "concurrently 'lerna run start:Web' "
   },
   "prisma": {
     "seed": "ts-node -r tsconfig-paths/register -r ts-node prisma/seed.ts"

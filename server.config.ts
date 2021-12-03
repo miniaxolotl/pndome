@@ -19,7 +19,7 @@ export const config: {
   ADMIN_PASS: string;
 } = {
   DEVELOPMENT: !!process.env.DEVELOPMENT ?? true,
-  PORT: process.env.PORT ? parseInt(process.env.PORT) : 3306,
+  PORT: process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT) : 3306,
   MAX_BYTES: process.env.MAX_BYTES ? eval(process.env.MAX_BYTES) : 1 ** 20 * 500,
   FILE_PATH: process.env.FILE_PATH ?? '/tmp/pndome',
   BUNNYCDN_API: process.env.BUNNYCDN_API ?? 'storage.bunnycdn.com',

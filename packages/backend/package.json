@@ -1,24 +1,25 @@
 {
-	"name": "backend",
-	"version": "0.0.0",
-	"license": "GPL-3.0",
-	"description": "A private file hosting service with a clean and simple user interface, and user access controls.",
-	"author": "Elias Mawa <elias@emawa.io>",
-	"private": true,
-	"homepage": "https://github.com/theluckyegg/pndome/tree/main/packages/backend#readme",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/theluckyegg/pndome.git"
-	},
-	"main": "src/index.ts",
-	"scripts": {
-		"test": "jest",
-		"watch": "nodemon --watch '../**/src/**/*' --watch 'spec/**/*' -e ts,tsx --exec ts-node -r tsconfig-paths/register -r ts-node ./src/server.ts",
-		"serve": "yarn watch",
-		"build": "tsc",
-		"start": "node ../../build/packages/backend/src/server.js"
-	},
-	"bugs": {
-		"url": "https://github.com/theluckyegg/pndome/issues"
-	}
+  "name": "backend",
+  "version": "0.0.0",
+  "license": "GPL-3.0",
+  "description": "A private file hosting service with a clean and simple user interface, and user access controls.",
+  "author": "Elias Mawa <elias@emawa.io>",
+  "private": true,
+  "homepage": "https://github.com/theluckyegg/pndome/tree/main/packages/backend#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theluckyegg/pndome.git"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "jest",
+    "watch": "nodemon --watch '../**/src/**/*' --watch 'spec/**/*' -e ts,tsx --exec ts-node -r tsconfig-paths/register -r ts-node ./src/server.ts",
+    "serve": "yarn watch",
+    "build": "tsc",
+    "start": "node ../../build/packages/backend/src/server.js",
+    "serve:api": "yarn watch"
+  },
+  "bugs": {
+    "url": "https://github.com/theluckyegg/pndome/issues"
+  }
 }

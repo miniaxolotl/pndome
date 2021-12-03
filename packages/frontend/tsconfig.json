@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es6",
+    "sourceMap": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    /* typechecking options */
+    "noEmit": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    /* module resolution options */
+    "isolatedModules": true,
+    "jsx": "preserve",
+
+    "types": ["node", "react"],
+
+    "baseUrl": "./src",
+    "paths": {
+      "@pages/*": ["pages/*"],
+      "@components/*": ["components/*"],
+      "@stores/*": ["stores/*"],
+      "@themes/*": ["themes/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+}

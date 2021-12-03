@@ -16,6 +16,7 @@
     "esModuleInterop": true,
     "isolatedModules": false,
     "typeRoots": ["./node_modules/@types"],
+    "forceConsistentCasingInFileNames": true,
 
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
