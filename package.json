@@ -1,67 +1,82 @@
 {
-	"name": "pndome",
-	"version": "1.0.0",
-	"license": "GPL-3.0",
-	"description": "A private file hosting service with a clean and simple user interface, and user access controls.",
-	"author": "Elias Mawa <elias@emawa.io>",
-	"private": true,
-	"homepage": "https://github.com/theluckyegg/pndome#readme",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/theluckyegg/pndome.git"
-	},
-	"scripts": {
-		"lint": "yarn eslint . --ext .js,.ts,.tsx",
-		"test": "lerna run test",
-		"serve": "lerna run serve --stream",
-		"start": "concurrently 'lerna run start' ",
-		"build": "concurrently 'lerna run build' "
-	},
-	"prisma": {
-		"seed": "ts-node prisma/seed.ts"
-	},
-	"bugs": {
-		"url": "https://github.com/theluckyegg/pndome/issues"
-	},
-	"devDependencies": {
-		"@koa/cors": "^3.1.0",
-		"@types/koa": "^2.13.4",
-		"@types/koa-bodyparser": "^4.3.3",
-		"@types/koa-json": "^2.0.20",
-		"@types/koa-router": "^7.4.4",
-		"@types/koa-session": "^5.10.4",
-		"@types/koa-websocket": "^5.0.7",
-		"@types/koa__cors": "^3.0.3",
-		"@types/uuid": "^8.3.1",
-		"@typescript-eslint/eslint-plugin": "^5.3.1",
-		"@typescript-eslint/parser": "^5.3.1",
-		"concurrently": "^6.3.0",
-		"eslint": "^8.2.0",
-		"eslint-config-prettier": "^8.3.0",
-		"eslint-plugin-prettier": "^4.0.0",
-		"jest": "^27.2.4",
-		"lerna": "^4.0.0",
-		"nodemon": "^2.0.13",
-		"prettier": "^2.4.1",
-		"prisma": "^3.2.1",
-		"ts-jest": "^27.0.5",
-		"ts-node": "^10.3.0",
-		"typescript": "^4.4.3"
-	},
-	"dependencies": {
-		"@prisma/client": "^3.4.1",
-		"@types/jest": "^27.0.2",
-		"@types/lodash": "^4.14.176",
-		"bcrypt": "^5.0.1",
-		"joi": "^17.4.2",
-		"koa": "^2.13.3",
-		"koa-bodyparser": "^4.3.0",
-		"koa-json": "^2.0.2",
-		"koa-router": "^10.1.1",
-		"koa-session": "^6.2.0",
-		"koa-websocket": "^6.0.0",
-		"lodash": "^4.17.21",
-		"uid": "^2.0.0",
-		"uuid": "^8.3.2"
-	}
+  "name": "pndome",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "description": "A private file hosting service with a clean and simple user interface, and user access controls.",
+  "author": "Elias Mawa <elias@emawa.io>",
+  "private": true,
+  "homepage": "https://github.com/theluckyegg/pndome#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theluckyegg/pndome.git"
+  },
+  "scripts": {
+    "lint": "yarn eslint . --ext .js,.ts,.tsx",
+    "test": "lerna run test",
+    "serve": "lerna run serve --stream",
+    "start": "concurrently 'lerna run start' ",
+    "build": "concurrently 'lerna run build' "
+  },
+  "prisma": {
+    "seed": "ts-node -r tsconfig-paths/register -r ts-node prisma/seed.ts"
+  },
+  "bugs": {
+    "url": "https://github.com/theluckyegg/pndome/issues"
+  },
+  "devDependencies": {
+    "@koa/cors": "^3.1.0",
+    "@types/jest": "^27.0.2",
+    "@types/jsonwebtoken": "^8.5.6",
+    "@types/koa": "^2.13.4",
+    "@types/koa-bodyparser": "^4.3.3",
+    "@types/koa-json": "^2.0.20",
+    "@types/koa-logger": "^3.1.2",
+    "@types/koa-router": "^7.4.4",
+    "@types/koa-session": "^5.10.4",
+    "@types/koa-websocket": "^5.0.7",
+    "@types/koa__cors": "^3.0.3",
+    "@types/lodash": "^4.14.176",
+    "@types/node": "^16.11.9",
+    "@types/uuid": "^8.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
+    "concurrently": "^6.3.0",
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.2.4",
+    "lerna": "^4.0.0",
+    "nodemon": "^2.0.13",
+    "prettier": "^2.4.1",
+    "prisma": "^3.2.1",
+    "ts-jest": "^27.0.5",
+    "ts-node": "^10.3.0",
+    "tsconfig-paths": "^3.11.0",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.4.1",
+    "@types/node-fetch": "2",
+    "backend": "./packages/backend",
+    "bcrypt": "^5.0.1",
+    "file-type": "^16.5.3",
+    "frontend": "./packages/frontend",
+    "joi": "^17.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.13.3",
+    "koa-body": "^4.2.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-json": "^2.0.2",
+    "koa-jwt": "^4.0.3",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.1.1",
+    "koa-session": "^6.2.0",
+    "koa-websocket": "^6.0.0",
+    "lodash": "^4.17.21",
+    "node-fetch": "2",
+    "uid": "^2.0.0",
+    "uuid": "^8.3.2",
+    "webpack": "^5.64.1",
+    "webpack-cli": "^4.9.1"
+  }
 }

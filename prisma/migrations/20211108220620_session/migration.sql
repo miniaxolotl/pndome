@@ -4,7 +4,7 @@ CREATE TABLE `Session` (
     `userId` VARCHAR(16) NOT NULL,
     `revoked` BOOLEAN NOT NULL DEFAULT false,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `expires` DATETIME(3),
+    `expires` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Session_sessionId_key`(`sessionId`),
     PRIMARY KEY (`sessionId`, `userId`)

@@ -79,3 +79,10 @@ export const SERVER_ERROR = {
     message: 'Server Error: Bad gateway.',
   },
 };
+
+export const StatusCodes = {
+  SUCCESS,
+  REDIRECTION,
+  CLIENT_ERROR,
+  SERVER_ERROR,
+};

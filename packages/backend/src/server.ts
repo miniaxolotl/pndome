@@ -1,17 +1,27 @@
 import Koa, { ParameterizedContext } from 'koa';
+import fs from 'fs';
 
-import BodyParser from 'koa-bodyparser';
+import Body from 'koa-body';
 import CORS from '@koa/cors';
 import KoaJSON from 'koa-json';
 import KoaSession from 'koa-session';
 import Router from 'koa-router';
 import websockify from 'koa-websocket';
-
-import { PrismaClient } from '@prisma/client';
+import logger from 'koa-logger';
 
 import config from '../../../server.config';
 
-import { FileController, UserController, SessionController, OAuthController } from '.';
+import {
+  FileController,
+  UserController,
+  SessionController,
+  JWTController,
+  RoleController,
+  StreamController,
+  FolderController,
+} from '.';
+import { connectDB } from 'lib/src';
+import { DownloadController } from './controller/v1/download';
 
 /************************************************
  * setup
@@ -29,10 +39,9 @@ const socket_router = new Router();
  * database
  ************************************************/
 
-app.context.db = new PrismaClient();
-if (app.context.db) {
-  console.log('connected successfully to database');
-}
+(async () => {
+  await connectDB();
+})();
 
 /************************************************
  * middleware
@@ -60,7 +69,21 @@ app.use(
 
 app.use(KoaJSON({ pretty: false, param: 'pretty' }));
 
-app.use(BodyParser());
+app.use(
+  Body({
+    formidable: {
+      maxFileSize: config.MAX_BYTES,
+      uploadDir: config.FILE_PATH,
+      multiples: true,
+    },
+    multipart: true,
+    urlencoded: true,
+  }),
+);
+
+if (config.DEVELOPMENT) {
+  app.use(logger());
+}
 
 /************************************************
  * authentication
@@ -75,10 +98,14 @@ app.use(BodyParser());
   const API: Router = new Router();
 
   API.use(['/f', '/file'], FileController.routes());
+  API.use(['/fo', '/folder'], FolderController.routes());
+  API.use(['/d', '/download'], DownloadController.routes());
+  API.use(['/s', '/stream'], StreamController.routes());
+  API.use(['/r', '/role'], RoleController.routes());
   API.use(['/u', '/user'], UserController.routes());
 
-  API.use(['/auth'], SessionController.routes());
-  API.use(['/oauth2'], OAuthController.routes());
+  API.use(['/authenticate'], SessionController.routes());
+  API.use(['/auth'], JWTController.routes());
 
   router.use('/api/v1', API.routes());
 }
@@ -99,6 +126,10 @@ app.ws.use(socket_router.routes() as unknown as Koa.Middleware);
 /************************************************
  * start server
  ************************************************/
+
+if (!fs.existsSync(config.FILE_PATH)) {
+  fs.mkdirSync(config.FILE_PATH, { recursive: true });
+}
 
 app.listen(config.PORT, () => {
   // eslint-disable-next-line no-console

@@ -1,5 +1,6 @@
-import LoginSchema from './login.schema';
-import UploadSchema from './upload.schema';
-import UserSchema from './user.schema';
-
-export { LoginSchema, UploadSchema, UserSchema };
+export * from './auth.schema';
+export * from './file.schema';
+export * from './folder.schema';
+export * from './role.schema';
+export * from './shared.schema';
+export * from './user.schema';

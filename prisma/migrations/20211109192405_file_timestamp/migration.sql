@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE `FileTimestamp` (
     `fileId` VARCHAR(16) NOT NULL,
-    `type` TINYINT UNSIGNED NOT NULL,
+    `typeId` INTEGER NOT NULL,
     `created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`fileId`)

@@ -44,11 +44,11 @@ model UserRole {
 }
 
 model Session {
-  sessionId String    @unique @db.VarChar(64)
-  userId    String    @db.VarChar(16)
-  revoked   Boolean   @default(false)
-  created   DateTime  @default(now())
-  expires   DateTime?
+  sessionId String   @unique @db.VarChar(64)
+  userId    String   @db.VarChar(16)
+  revoked   Boolean  @default(false)
+  created   DateTime @default(now())
+  expires   DateTime
 
   user User @relation(fields: [userId], references: [userId])
 
@@ -60,8 +60,8 @@ model Folder {
   name      String    @db.VarChar(255)
   password  String?   @db.VarChar(255)
   protected Boolean   @default(true)
-  dCount    Int       @db.UnsignedInt
-  vCount    Int       @db.UnsignedInt
+  dCount    Int       @default(0) @db.UnsignedInt
+  vCount    Int       @default(0) @db.UnsignedInt
   deleted   DateTime?
   created   DateTime  @default(now())
   updated   DateTime  @updatedAt
@@ -76,13 +76,14 @@ model File {
   fileId   String    @unique @db.VarChar(16)
   folderId String    @db.VarChar(16)
   name     String    @db.VarChar(255)
-  type     String    @db.VarChar(32)
+  media    Boolean   @default(false)
+  type     String    @db.VarChar(255)
   ext      String    @db.VarChar(32)
   bytes    Int       @db.UnsignedInt
   sha256   String    @db.VarChar(64)
   md5      String    @db.VarChar(32)
-  dCount   Int       @db.UnsignedInt
-  vCount   Int       @db.UnsignedInt
+  dCount   Int       @default(0) @db.UnsignedInt
+  vCount   Int       @default(0) @db.UnsignedInt
   deleted  DateTime?
   created  DateTime  @default(now())
   updated  DateTime  @updatedAt
@@ -96,6 +97,7 @@ model File {
 model UserFolder {
   userId   String  @db.VarChar(16)
   folderId String  @db.VarChar(16)
+  access   Boolean @default(true)
   owner    Boolean @default(false)
 
   user User   @relation(fields: [userId], references: [userId])
@@ -104,12 +106,22 @@ model UserFolder {
   @@id([userId, folderId])
 }
 
+model FileTimestampType {
+  typeId Int    @default(autoincrement())
+  type   String @db.VarChar(16)
+
+  timestamps FileTimestamp[]
+
+  @@id([typeId])
+}
+
 model FileTimestamp {
   fileId  String   @db.VarChar(16)
-  type    Int      @db.UnsignedTinyInt
+  typeId  Int
   created DateTime @default(now())
 
-  file File @relation(fields: [fileId], references: [fileId])
+  File File?             @relation(fields: [fileId], references: [fileId])
+  type FileTimestampType @relation(fields: [typeId], references: [typeId])
 
   @@id([fileId])
 }

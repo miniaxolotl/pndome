@@ -1,4 +1,4 @@
-export const RoleType = {
+export const UserRoleType = {
   DISABLED: {
     roleId: 'disabled',
     authority: 0,

@@ -1,9 +1,31 @@
 import Joi from 'joi';
 
-export default Joi.object({
-  email: Joi.string().email().required(),
+export const UserSchema = Joi.object({
+  email: Joi.string().max(32).email().required(),
 
-  username: Joi.string().alphanum().lowercase().min(3).max(32).required(),
+  username: Joi.string().min(3).max(32).alphanum().lowercase().required(),
 
-  password: Joi.string().min(8).max(64).required(),
+  password: Joi.string().min(8).max(256).trim().required(),
+});
+
+// TODO: implement me
+export const CreateUserSchema = Joi.object({
+  email: Joi.string().max(32).email().required(),
+
+  username: Joi.string().min(3).max(32).alphanum().lowercase().required(),
+
+  password: Joi.string().min(8).max(256).trim().required(),
+
+  confirmPassword: Joi.string()
+    .label('Password confirmation')
+    .min(8)
+    .max(256)
+    .trim()
+    .valid(Joi.ref('password'))
+    .options({ messages: { 'any.only': '{{#label}} does not match' } })
+    .required(),
+});
+
+export const UserIdSchema = Joi.object({
+  username: Joi.string().min(3).max(32).alphanum().lowercase().required(),
 });

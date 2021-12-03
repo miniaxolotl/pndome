@@ -1,56 +1,47 @@
 {
-	"compilerOptions": {
-		"module": "CommonJS",
-		"target": "es2019",
-		"sourceMap": true,
-		"outDir": "./dist",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "esnext",
+    "sourceMap": true,
+    "outDir": "./build",
 
-		/* typechecking options */
-		"strict": true,
-		"strictPropertyInitialization": true,
-		"noImplicitAny": false,
+    /* typechecking options */
+    "strict": true,
+    "strictPropertyInitialization": true,
+    "noImplicitAny": false,
 
-		/* module resolution options */
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
-		"esModuleInterop": true,
-		"isolatedModules": false,
-		"typeRoots" : ["./node_modules/@types"],
-		
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
+    /* module resolution options */
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "isolatedModules": false,
+    "typeRoots": ["./node_modules/@types"],
 
-		"types": [
-			"lodash",
-			"node",
-			"jest"
-		],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
 
-		"baseUrl": "./packages/",
-		"paths": {
-			"@backend/controller": ["backend/src/controller"],
-			"@backend/controller/*": ["backend/src/controller/*"],
-			// "@backend/middleware": ["backend/src/middleware"],
-			// "@backend/middleware/*": ["backend/src/middleware/*"],
-			// "@frontend": ["frontend/"],
-			// "@frontend/*": ["frontend/*"],
-			"@lib/shared": ["lib/src/shared"],
-			"@lib/shared/*": ["lib/src/shared/*"],
-			"@lib/service": ["lib/src/service/"],
-			"@lib/service/*": ["lib/src/service/*"],
-			"@lib/schema": ["lib/src/schema"],
-			"@lib/schema/*": ["lib/src/schema/*"],
-			"@lib/util": ["lib/src/util"],
-			"@lib/util/*": ["lib/src/util/*"]
-		}
-	},
-	"exclude": [
-		"node_modules/"
-	],
-	"include": [
-		"./packages/**/src/**/*",
-		"./packages/**/spec/**/*",
-		"./server.config.ts",
-		"./prisma/seed.ts",
-	]
+    "types": ["lodash", "node", "jest"],
+
+    "baseUrl": "./packages",
+    "paths": {
+      "@backend/middleware": ["backend/src/middleware"],
+      "@backend/middleware/*": ["backend/src/middleware/*"],
+
+      "@lib/db": ["lib/src/db"],
+      "@lib/db/*": ["lib/src/db/*"],
+
+      "@lib/shared": ["lib/src/shared"],
+      "@lib/shared/*": ["lib/src/shared/*"],
+
+      "@lib/type": ["lib/src/type"],
+      "@lib/type/*": ["lib/src/type/*"],
+
+      "@lib/schema": ["lib/src/schema"],
+      "@lib/schema/*": ["lib/src/schema/*"],
+
+      "@lib/util": ["lib/src/util"],
+      "@lib/util/*": ["lib/src/util/*"]
+    }
+  },
+  "exclude": ["node_modules/"]
 }
