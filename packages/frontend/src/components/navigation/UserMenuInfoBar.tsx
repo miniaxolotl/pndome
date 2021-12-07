@@ -23,7 +23,7 @@ const UserMenuInfoBar = () => {
       spacing={4}
       paddingX={4}
       align="center"
-      borderRightRadius="xl"
+      shadow="md"
     >
       {authenticated ? <AuthenticatedView /> : <UnauthenitcatedView />}
     </Stack>

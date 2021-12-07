@@ -1,5 +1,8 @@
 export const DefaultLayoutTheme = {
-  baseStyle: () => {
+  baseStyle: ({ colorMode }) => {
+    // const color = colorMode === 'dark' ? 'fg.100' : 'bg.700';
+    const background = colorMode === 'dark' ? 'brand.500' : 'bg.500';
+
     return {
       navigation: {
         '.desktop-navigation': {
@@ -7,6 +10,14 @@ export const DefaultLayoutTheme = {
         },
         '.mobile-navigation': {
           display: 'none',
+          '.user-menu-info-bar': {
+            borderRadius: 'xl',
+            // color,
+            background,
+            // svg: {
+            //   color,
+            // },
+          },
         },
         '@media only screen and (max-width: 480px)': {
           '.desktop-navigation': {

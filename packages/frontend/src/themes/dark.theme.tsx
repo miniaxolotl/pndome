@@ -2,7 +2,7 @@ export const darkTheme = {
   styles: {
     global: {
       body: {
-        bg: 'bg.700',
+        bg: 'bg.800',
       },
     },
   },

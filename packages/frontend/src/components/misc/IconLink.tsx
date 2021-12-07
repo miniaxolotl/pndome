@@ -10,12 +10,12 @@ interface IconLinkProps {
 
 const IconLink = (props: IconLinkProps) => {
   const { children, icon } = props;
-  const { container } = useMultiStyleConfig('iconLinkStyle', props);
+  const style = useMultiStyleConfig('IconLinkTheme', props);
 
   return (
-    <Stack as={ChakraLink} sx={container} direction="row" align="center" spacing={2}>
+    <Stack as={ChakraLink} sx={style} direction="row" align="center" spacing={2}>
       <Text className="link-text">{children}</Text>
-      <Icon className="link-icon" mx="1px" as={icon} />
+      <Icon className="link-icon" mx="2px" as={icon} />
     </Stack>
   );
 };
