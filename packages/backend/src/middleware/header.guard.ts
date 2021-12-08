@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { ParameterizedContext } from 'koa';
-import { StatusCodes } from 'lib/src';
+
+import { StatusCodes } from '@libs/shared';
 
 export const HeaderGuard = (Schema: Joi.ObjectSchema) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {

@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 
-import config from '../../../../server.config';
+import { ServerConfig } from '@libs/config';
 
-const saltRounds = config.PORT || 10;
+const saltRounds = ServerConfig.BCRYPT_SALT_ROUNDS || 10;
 
 /**
  * Salt the hash

@@ -1,9 +1,9 @@
 import { uid } from 'uid/secure';
 
-import { FolderValues } from '@lib/type';
-import { genHash } from '@lib/util';
-
-import { db, generateFantasyName } from 'lib/src';
+import { FolderValues } from '@libs/shared';
+import { db } from '@libs/database';
+import { genHash } from '@libs/utility';
+import { generateFantasyName } from '@libs/words';
 
 /**
  * create a new folder

@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 
-import { LoginValues } from '@lib/schema';
-import { compare } from '@lib/util';
-import { db } from 'lib/src';
+import { LoginValues } from '@libs/shared';
+import { compare } from '@libs/utility';
+import { db } from '@libs/database';
 
-import config from '../../../../../../server.config';
+import config from '../../../../../../libs/config/src/server.config';
 
 const login = async ({ username, password }: LoginValues) => {
   const user = await db.user.findFirst({

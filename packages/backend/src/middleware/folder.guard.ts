@@ -1,7 +1,8 @@
 import { ParameterizedContext } from 'koa';
 
-import { CLIENT_ERROR } from '@lib/shared';
-import { compare, db } from 'lib/src';
+import { CLIENT_ERROR } from '@libs/shared';
+import { compare } from '@libs/utility';
+import { db } from '@libs/database';
 
 export const FolderGuard = (options: { owner } = { owner: false }) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {

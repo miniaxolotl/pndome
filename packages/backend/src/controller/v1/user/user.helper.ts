@@ -1,10 +1,9 @@
+import { omit } from 'lodash';
 import { uid } from 'uid/secure';
 
-import { UserValues } from '@lib/type';
-import { genHash } from '@lib/util';
-import { omit } from 'lodash';
-
-import { db } from 'lib/src';
+import { UserValues } from '@libs/shared';
+import { db } from '@libs/database';
+import { genHash } from '@libs/utility';
 
 /**
  * create a new user

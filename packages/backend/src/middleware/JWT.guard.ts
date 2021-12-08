@@ -1,8 +1,8 @@
-import { CLIENT_ERROR } from '@lib/shared';
 import { ParameterizedContext } from 'koa';
 import jwt from 'jsonwebtoken';
 
-import { config } from '../../../../server.config';
+import { CLIENT_ERROR } from '@libs/shared';
+import { ServerConfig } from '@libs/config';
 
 interface JWTPayload {
   userId: string;
@@ -17,7 +17,10 @@ export const JWTGuard = (options?: { passthrough?: boolean }) => {
     if (authorization) {
       const authorization_key = authorization.split(' ')[1] ?? null;
       if (authorization_key) {
-        const payload: JWTPayload = jwt.verify(authorization_key, config.JWT_SECRET) as JWTPayload;
+        const payload: JWTPayload = jwt.verify(
+          authorization_key,
+          ServerConfig.JWT_SECRET,
+        ) as JWTPayload;
         if (new Date(payload.exp) > new Date()) {
           ctx.state = payload;
           return await next();

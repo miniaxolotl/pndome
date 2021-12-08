@@ -5,10 +5,10 @@ import { omit } from 'lodash';
 import path from 'path';
 import { uid } from 'uid/secure';
 
-import { FileValues } from '@lib/type';
-import { db } from 'lib/src';
+import { FileValues } from '@libs/shared';
+import { db } from '@libs/database';
 
-import config from '../../../../../../server.config';
+import config from '../../../../../../libs/config/src/server.config';
 /**
  * create a new file
  * @param data file data to create

@@ -1,22 +1,32 @@
 import FileType from 'file-type';
+import { Folder } from '@prisma/client';
 import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
 import crypto from 'crypto';
 import fs from 'fs';
+import { omit } from 'lodash';
 import path from 'path';
 
-import { FileHelper } from './file.helper';
-import { Folder } from '.prisma/client';
-import { FolderGuard } from '@backend/middleware/folder.guard';
-import { FolderHelper } from '../folder';
-import { RoleGuard } from '@backend/middleware/role.guard';
-import { db } from '@lib/db';
-import { omit } from 'lodash';
-import { FileDownloadSchema, FileUploadSchema, IdSchema, SearchSchema } from '@lib/schema';
-import { HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
-import { SERVER_ERROR, SUCCESS, StatusCodes, UserRoleType } from '@lib/shared';
+import { db } from '@libs/database';
+import {
+  FileDownloadSchema,
+  FileUploadSchema,
+  IdSchema,
+  SERVER_ERROR,
+  SUCCESS,
+  SearchSchema,
+  StatusCodes,
+  UserRoleType,
+} from '@libs/shared';
 
-import config from '../../../../../../server.config';
+import { FolderGuard } from '@backend/middleware/folder.guard';
+import { RoleGuard } from '@backend/middleware/role.guard';
+import { HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
+
+import { FileHelper } from './file.helper';
+import { FolderHelper } from '../folder';
+
+import config from '../../../../../../libs/config/src/server.config';
 
 const router: Router = new Router();
 

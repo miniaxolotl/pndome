@@ -3,14 +3,15 @@ import Router from 'koa-router';
 import fetch from 'node-fetch';
 import path from 'path';
 
-import { FileHelper } from '../file';
 import { RoleGuard } from '@backend/middleware/role.guard';
-import { UserRoleType } from '@lib/shared';
-import { db } from '@lib/db';
-import { FileDownloadSchema, IdSchema } from '@lib/schema';
+import { UserRoleType } from '@libs/shared';
+import { db } from '@libs/database';
+import { FileDownloadSchema, IdSchema } from '@libs/shared';
+
+import { FileHelper } from '../file';
 import { FolderGuard, HeaderGuard, JWTGuard, ParamGuard } from '@backend/middleware';
 
-import config from '../../../../../../server.config';
+import config from '../../../../../../libs/config/src/server.config';
 
 const router: Router = new Router();
 

@@ -2,10 +2,10 @@ import { ParameterizedContext } from 'koa';
 import Router from 'koa-router';
 
 import { RoleGuard } from '@backend/middleware/role.guard';
-import { RoleHelper } from '.';
-import { SearchSchema } from '@lib/schema';
-import { UserRoleType } from '@lib/shared';
 import { JWTGuard, ParamGuard } from '@backend/middleware';
+import { SearchSchema, UserRoleType } from '@libs/shared';
+
+import { RoleHelper } from '.';
 
 const router: Router = new Router();
 

@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { ParameterizedContext } from 'koa';
 import _ from 'lodash';
 
-import { StatusCodes } from 'lib/src';
+import { StatusCodes } from '@libs/shared';
 
 export const SchemaGuard = (Schema: Joi.ObjectSchema) => {
   return async (ctx: ParameterizedContext, next: () => Promise<void>) => {

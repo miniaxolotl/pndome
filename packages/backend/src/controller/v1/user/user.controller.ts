@@ -3,11 +3,21 @@ import Router from 'koa-router';
 import _ from 'lodash';
 
 import { RoleGuard } from '@backend/middleware/role.guard';
-import { UserHelper } from '.';
-import { UserValues } from '@lib/type';
-import { CLIENT_ERROR, SERVER_ERROR, SUCCESS, UserRoleType } from '@lib/shared';
-import { CreateUserSchema, IdSchema, RoleSchema, RoleValues, SearchSchema } from '@lib/schema';
+import {
+  CLIENT_ERROR,
+  CreateUserSchema,
+  IdSchema,
+  RoleSchema,
+  RoleValues,
+  SERVER_ERROR,
+  SUCCESS,
+  SearchSchema,
+  UserRoleType,
+  UserValues,
+} from '@libs/shared';
 import { JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
+
+import { UserHelper } from '.';
 
 const router: Router = new Router();
 

@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-import config from '../../../../../../server.config';
+import config from '../../../../../../libs/config/src/server.config';
 
 /**
  * download file from cdn

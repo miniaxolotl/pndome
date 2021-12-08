@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { ParameterizedContext } from 'koa';
 
-import { StatusCodes } from 'lib/src';
+import { StatusCodes } from '@libs/shared';
 
 export const ParamGuard = (
   Schema: Joi.ObjectSchema,

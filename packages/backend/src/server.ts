@@ -7,11 +7,11 @@ import Koa, { ParameterizedContext } from 'koa';
 import CORS from '@koa/cors';
 import KoaJSON from 'koa-json';
 import Router from 'koa-router';
-import config from '../../../server.config';
+import config from '../../../libs/config/src/server.config';
 
 import { DownloadController } from './controller/v1/download';
 import KoaSession from 'koa-session';
-import { connectDB } from 'lib/src';
+import { connectDB } from '@libs/database';
 
 import {
   FileController,

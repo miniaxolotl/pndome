@@ -3,10 +3,9 @@ import Router from 'koa-router';
 import _ from 'lodash';
 
 import { FolderGuard } from '@backend/middleware/folder.guard';
-import { FolderHelper } from '.';
 import { RoleGuard } from '@backend/middleware/role.guard';
-import { db } from '@lib/db';
-import { CLIENT_ERROR, UserRoleType } from '@lib/shared';
+import { db } from '@libs/database';
+import { CLIENT_ERROR, UserRoleType } from '@libs/shared';
 import {
   CreateFolderSchema,
   FileDownloadSchema,
@@ -15,8 +14,10 @@ import {
   FolderPatchSchema,
   IdSchema,
   SearchSchema,
-} from '@lib/schema';
+} from '@libs/shared';
 import { HeaderGuard, JWTGuard, ParamGuard, SchemaGuard } from '@backend/middleware';
+
+import { FolderHelper } from '.';
 
 const router: Router = new Router();
 

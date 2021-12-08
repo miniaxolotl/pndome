@@ -1,9 +1,9 @@
 import { omit } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
-import { LoginValues } from '@lib/schema';
-import { compare } from '@lib/util';
-import { db } from 'lib/src';
+import { LoginValues } from '@libs/shared';
+import { compare } from '@libs/utility';
+import { db } from '@libs/database';
 
 const login = async ({ username, password }: LoginValues) => {
   const user = await db.user.findFirst({

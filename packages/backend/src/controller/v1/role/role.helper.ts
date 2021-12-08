@@ -1,4 +1,4 @@
-import { db } from 'lib/src';
+import { db } from '@libs/database';
 
 /**
  * show all roles

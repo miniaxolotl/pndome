@@ -3,14 +3,14 @@ import Router from 'koa-router';
 import fetch from 'node-fetch';
 import path from 'path';
 
-import { FileHelper } from '../file';
 import { RoleGuard } from '@backend/middleware/role.guard';
-import { db } from '@lib/db';
-import { FileDownloadSchema, IdSchema } from '@lib/schema';
+import { ServerConfig } from '@libs/config';
+import { db } from '@libs/database';
+import { FileDownloadSchema, IdSchema } from '@libs/shared';
 import { FolderGuard, HeaderGuard, JWTGuard, ParamGuard } from '@backend/middleware';
-import { SUCCESS, UserRoleType } from '@lib/shared';
+import { SUCCESS, UserRoleType } from '@libs/shared';
 
-import config from '../../../../../../server.config';
+import { FileHelper } from '../file';
 
 const router: Router = new Router();
 
@@ -47,12 +47,14 @@ router.get(
 
         const response = await fetch(
           `https://${
-            file.media ? config.BUNNYCDN_API_MEDIA : config.BUNNYCDN_API
+            file.media ? ServerConfig.BUNNYCDN_API_MEDIA : ServerConfig.BUNNYCDN_API
           }/uploads/${filePath}`,
           {
             method: 'GET',
             headers: {
-              AccessKey: file.media ? config.BUNNYCDN_API_MEDIA_KEY : config.BUNNYCDN_API_KEY,
+              AccessKey: file.media
+                ? ServerConfig.BUNNYCDN_API_MEDIA_KEY
+                : ServerConfig.BUNNYCDN_API_KEY,
             },
           },
         );
@@ -70,12 +72,14 @@ router.get(
 
         const response = await fetch(
           `https://${
-            file.media ? config.BUNNYCDN_API_MEDIA : config.BUNNYCDN_API
+            file.media ? ServerConfig.BUNNYCDN_API_MEDIA : ServerConfig.BUNNYCDN_API
           }/uploads/${filePath}`,
           {
             method: 'GET',
             headers: {
-              AccessKey: file.media ? config.BUNNYCDN_API_MEDIA_KEY : config.BUNNYCDN_API_KEY,
+              AccessKey: file.media
+                ? ServerConfig.BUNNYCDN_API_MEDIA_KEY
+                : ServerConfig.BUNNYCDN_API_KEY,
             },
           },
         );
