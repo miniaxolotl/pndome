@@ -10,7 +10,7 @@ import { useMultiStyleConfig } from '@chakra-ui/react';
 const UserMenu = () => {
   const style = useMultiStyleConfig('UserMenuTheme', {});
   return (
-    <Stack sx={style} direction="row" spacing={0} borderRadius="xl" shadow="md">
+    <Stack sx={style} direction="row" spacing={0} borderRadius="xl">
       <Menu isLazy>
         <MenuButton as={IconButton} icon={<FiMenu />} className="user-menu-button" fontSize="2xl" />
         <MenuList borderRadius="xl" className="user-menu-list">

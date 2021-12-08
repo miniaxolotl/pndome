@@ -1,7 +1,7 @@
+import { IconButton } from '@chakra-ui/react';
 import React from 'react';
 import { Container, Stack } from '@chakra-ui/layout';
-import { FiEye, FiEyeOff, FiKey, FiLock, FiTrash, FiUnlock, FiUpload } from 'react-icons/fi';
-import { IconButton, Input } from '@chakra-ui/react';
+import { FiEyeOff, FiKey, FiUnlock, FiUpload } from 'react-icons/fi';
 
 const UploadToolOptionBar = () => {
   return (

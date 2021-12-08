@@ -2,7 +2,8 @@ import React from 'react';
 import { Stack } from '@chakra-ui/react';
 import { FiLogIn, FiUserPlus } from 'react-icons/fi';
 
-import IconLink from '@components/misc/IconLink';
+import IconLink from 'components/misc/IconLink';
+import { useState } from 'stores/StateProvider';
 
 const UnauthenitcatedView = () => (
   <>
@@ -14,18 +15,11 @@ const UnauthenitcatedView = () => (
 const AuthenticatedView = () => <IconLink icon={FiLogIn}>Username</IconLink>;
 
 const UserMenuInfoBar = () => {
-  const authenticated = false;
+  const authentication = useState('authentication');
 
   return (
-    <Stack
-      className="user-menu-info-bar"
-      direction="row"
-      spacing={4}
-      paddingX={4}
-      align="center"
-      shadow="md"
-    >
-      {authenticated ? <AuthenticatedView /> : <UnauthenitcatedView />}
+    <Stack className="user-menu-info-bar" direction="row" spacing={4} paddingX={4} align="center">
+      {authentication.token ? <AuthenticatedView /> : <UnauthenitcatedView />}
     </Stack>
   );
 };

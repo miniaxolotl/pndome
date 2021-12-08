@@ -2,8 +2,8 @@ import React from 'react';
 import { useMultiStyleConfig } from '@chakra-ui/react';
 import { Box, Container } from '@chakra-ui/layout';
 
-import DesktopNavigation from '@components/navigation/DesktopNavigation';
-import MobileNavigation from '@components/navigation/MobileNavigation';
+import DesktopNavigation from 'components/navigation/DesktopNavigation';
+import MobileNavigation from 'components/navigation/MobileNavigation';
 
 interface DefaultLayoutProps {
   children: React.ReactNode;

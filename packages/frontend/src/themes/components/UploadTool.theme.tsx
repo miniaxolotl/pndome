@@ -3,7 +3,7 @@ export const UploadToolTheme = {
     return {
       '.upload-tool-bar': {
         '.upload-button': {
-          'box-shadow': 'dark-xl',
+          shadow: 'base',
           borderRadius: 'xl',
           color: colorMode === 'dark' ? 'fg.100' : 'fg.900',
           background: colorMode === 'dark' ? 'mint.700' : 'mint.300',
@@ -20,7 +20,7 @@ export const UploadToolTheme = {
         },
         '.upload-tool-button-group': {
           borderRadius: 'xl',
-          'box-shadow': 'dark-xl',
+          shadow: 'base',
           '.private-button': {
             borderLeftRadius: 'xl',
             borderRightRadius: '0',

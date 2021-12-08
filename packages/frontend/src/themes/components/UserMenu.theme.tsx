@@ -6,6 +6,7 @@ export const UserMenuTheme = {
     const backgroundHover = colorMode === 'dark' ? 'brand.600' : 'brand.400';
     const backgroundActive = colorMode === 'dark' ? 'brand.500' : 'brand.500';
     return {
+      shadow: 'base',
       '.user-menu-button': {
         background: brand,
         borderRightRadius: '0',

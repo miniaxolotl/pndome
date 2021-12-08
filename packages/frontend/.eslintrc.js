@@ -3,7 +3,6 @@ module.exports = {
   plugins: [],
   extends: ['next', 'next/core-web-vitals', 'plugin:react/recommended'],
   env: {
-    es6: true,
     browser: true,
     jest: true,
     node: true,

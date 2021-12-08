@@ -1,12 +1,11 @@
-import { NextApiRequestCookies } from 'next/dist/next-server/server/api-utils';
 import React from 'react';
 import { ChakraProvider, cookieStorageManager, localStorageManager } from '@chakra-ui/react';
 
-import { theme } from '@themes/theme';
+import { theme } from 'themes/theme';
 
 interface ChakraSSRProps {
-  cookies?: NextApiRequestCookies;
   children?: React.ReactNode;
+  cookies: string;
 }
 
 export const ChakraSSR = ({ cookies, children }: ChakraSSRProps) => {

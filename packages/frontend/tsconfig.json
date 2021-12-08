@@ -1,27 +1,42 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "esnext",
-    "target": "es6",
+    "module": "commonjs",
+    "target": "esnext",
     "sourceMap": true,
     "lib": ["dom", "dom.iterable", "esnext"],
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "strictNullChecks": false,
+
     /* typechecking options */
     "noEmit": true,
     "allowJs": true,
     "skipLibCheck": true,
     /* module resolution options */
     "isolatedModules": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+
     "jsx": "preserve",
-
     "types": ["node", "react"],
-
     "baseUrl": "./src",
     "paths": {
+      "@pages/": ["pages/"],
       "@pages/*": ["pages/*"],
+
+      "@components/": ["components/"],
       "@components/*": ["components/*"],
+
+      "@stores/": ["stores/"],
       "@stores/*": ["stores/*"],
+
+      "@themes/": ["themes/"],
       "@themes/*": ["themes/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

@@ -4,6 +4,7 @@ export const LightModeButtonTheme = {
     const background = colorMode === 'dark' ? 'bg.500' : 'brand.50';
     const backgroundHover = colorMode === 'dark' ? 'bg.600' : 'bg.300';
     return {
+      shadow: 'base',
       background,
       svg: {
         color,

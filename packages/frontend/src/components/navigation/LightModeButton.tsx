@@ -14,7 +14,6 @@ const LightModeButton = () => {
       onClick={toggleColorMode}
       aria-label="light-mode"
       borderRadius="xl"
-      shadow="md"
     />
   );
 };
